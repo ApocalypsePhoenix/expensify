@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Transaction - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/addtransaction.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Add New Transaction</h1>
+                <p>Enter the details of your financial transaction below.</p>
+            </header>
+
+            <section class="transaction-form-section">
+                <h3>Transaction Details</h3>
+                <p class="transaction-description">Fill in the form to record a new transaction.</p>
+
+                <form action="/transactions/add" method="POST">
+                    <div class="input-group">
+                        <label for="date">Date</label>
+                        <input type="date" id="date" name="date" value="2025-06-22" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" name="description" placeholder="e.g., Coffee, Salary" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="category">Category</label>
+                        <select id="category" name="category" required>
+                            <option value="1">Food & Drink</option>
+                            <option value="2">Income</option>
+                            <option value="3">Shopping</option>
+                            <option value="4">Entertainment</option>
+                            <option value="5">Education</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" name="currency" required>
+                            <option value="1">USD - US Dollar</option>
+                            <option value="2">EUR - Euro</option>
+                            <option value="3">GBP - British Pound</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="amount">Amount (in your default currency)</label>
+                        <input type="number" id="amount" name="amount" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Transaction Type</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="transaction_type" value="Expense" checked> Expense</label>
+                            <label><input type="radio" name="transaction_type" value="Income"> Income</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Add Transaction</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

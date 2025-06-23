@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Budget - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/addbudget.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Create New Budget</h1>
+                <p>Set up a new budget to track your spending.</p>
+            </header>
+
+            <section class="budget-form-section">
+                <h3>Budget Details</h3>
+                <p class="budget-description">Fill in the form to create a new budget.</p>
+
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" name="category" placeholder="e.g., Groceries, Entertainment" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="limit">Limit Amount (in your default currency)</label>
+                        <input type="number" id="limit" name="limit" step="0.01" placeholder="0.00" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="period">Budget Period</label>
+                        <select id="period" name="period" required>
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Create Budget</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

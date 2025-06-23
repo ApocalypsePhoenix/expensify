@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Reminders - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/bill.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Bill Reminders</h1>
+                <p class="subheading">Keep track of your upcoming and recurring bills.</p>
+                <button class="btn-add-bill">+ Add Bill</button>
+            </header>
+
+            <section class="bill-list">
+                <!-- Bill Cards -->
+                <div class="bill-container">
+                    <div class="bill-card">
+                        <div class="bill-details">
+                            <h3>Netflix Subscription</h3>
+                            <p class="due-date">Due: Jun 27, 2025</p>
+                            <p class="amount">$15.99</p>
+                        </div>
+                        <div class="bill-status">
+                            <span class="status upcoming">Upcoming</span>
+                            <span class="frequency monthly">Monthly</span>
+                            <span class="category entertainment">Entertainment</span>
+                            <button class="mark-paid">Mark as Paid</button>
+                        </div>
+                    </div>
+
+                    <div class="bill-card">
+                        <div class="bill-details">
+                            <h3>Gym Membership</h3>
+                            <p class="due-date">Due: Jun 19, 2025</p>
+                            <p class="amount">$40.00</p>
+                        </div>
+                        <div class="bill-status">
+                            <span class="status paid">Paid</span>
+                            <span class="frequency monthly">Monthly</span>
+                            <span class="category health">Health</span>
+                            <p class="paid-date">Paid on Jun 19, 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

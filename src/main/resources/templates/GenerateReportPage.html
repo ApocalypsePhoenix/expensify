@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Reports - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/report.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Generate Reports</h1>
+                <p>Select report criteria and view your financial summary.</p>
+            </header>
+
+            <section class="report-options">
+                <h3>Report Options</h3>
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="report-period">Report Period</label>
+                        <select id="report-period" name="report-period">
+                            <option value="monthly">Monthly Report</option>
+                            <option value="quarterly">Quarterly Report</option>
+                            <option value="yearly">Yearly Report</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-download-pdf">Download PDF</button>
+                </form>
+            </section>
+
+            <section class="expense-breakdown">
+                <h3>Expense Breakdown by Category</h3>
+                <p class="description">Visual summary of your expenses distributed across different categories for the selected period.</p>
+                
+                <!-- Pie Chart Canvas -->
+                <div class="chart-container">
+                    <canvas id="expenseChart" width="400" height="400"></canvas> <!-- Explicit size for the chart -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Data for Pie Chart
+        const data = {
+            labels: ['Food & Drink', 'Transport', 'Utilities', 'Entertainment'], // Category names
+            datasets: [{
+                label: 'Expense Breakdown',
+                data: [40, 25, 16, 11], // Percentage of each category
+                backgroundColor: ['#28a745', '#ff6347', '#007bff', '#ffc107'], // Colors for each category
+                hoverOffset: 4 // Slight offset when hovering
+            }]
+        };
+
+        // Config for the Pie Chart
+        const config = {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: false, // Disable responsiveness for the fixed size
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                // Display the percentage in the tooltip
+                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Render the Pie Chart
+        var expenseChart = new Chart(document.getElementById('expenseChart'), config);
+    </script>
+
+</body>
+</html>

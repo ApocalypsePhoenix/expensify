@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Settings</h1>
+                <p>Manage your account settings and preferences.</p>
+            </header>
+
+            <section class="profile-settings">
+                <h2>Profile</h2>
+                <p>Update your personal information.</p>
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="fullname">Full Name</label>
+                        <input type="text" id="fullname" name="fullname" value="John Doe" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="john.doe@example.com" required>
+                    </div>
+
+                    <button type="submit" class="btn-save-profile">Save Profile</button>
+                </form>
+            </section>
+
+            <section class="preferences-settings">
+                <h2>Preferences</h2>
+                <p>Customize your app experience.</p>
+                <form action="#" method="POST">
+                    <div class="input-group">
+                        <label for="currency">Default Currency</label>
+                        <select id="currency" name="currency">
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-save-preferences">Save Preferences</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>

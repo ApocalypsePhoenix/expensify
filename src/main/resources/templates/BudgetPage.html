@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgets - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/budget.css">
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            </div>
+            <ul>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Transactions</a></li>
+                <li><a href="#">Bills</a></li>
+                <li><a href="#">Budgets</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header>
+                <h1>Budgets</h1>
+                <p class="subheading">Monitor your spending against set budgets for various categories.</p>
+                <button class="btn-create-budget">+ Create Budget</button>
+            </header>
+
+            <section class="budget-list">
+                <!-- Budget Cards -->
+                <div class="budget-container">
+                    <div class="budget-card">
+                        <div class="budget-details">
+                            <h3>Food & Drink</h3>
+                            <p class="budget-type">Monthly Budget</p>
+                            <p class="budget-spent">Spent: $150.75</p>
+                            <p class="budget-limit">Limit: $400.00</p>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 37.69%;"></div>
+                        </div>
+                        <p class="remaining">$249.25 Remaining</p>
+                        <span class="status on-track">On Track</span>
+                    </div>
+
+                    <div class="budget-card">
+                        <div class="budget-details">
+                            <h3>Entertainment</h3>
+                            <p class="budget-type">Monthly Budget</p>
+                            <p class="budget-spent">Spent: $30.00</p>
+                            <p class="budget-limit">Limit: $100.00</p>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 30%;"></div>
+                        </div>
+                        <p class="remaining">$70.00 Remaining</p>
+                        <span class="status on-track">On Track</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</body>
+</html>
