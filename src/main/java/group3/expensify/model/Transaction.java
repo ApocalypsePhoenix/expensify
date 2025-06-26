@@ -12,61 +12,30 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)  // Eagerly fetch Category and Currency
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;  // Many transactions can belong to one category
-
-    @ManyToOne(fetch = FetchType.EAGER)  // Eagerly fetch Currency
-    @JoinColumn(name = "currency_id", nullable = false)
-    private Currency currency;  // Many transactions can belong to one currency
-
-    @ManyToOne(fetch = FetchType.EAGER)  // Eagerly fetch User
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // Many transactions can belong to one user
-
-    @Column(nullable = false)
     private BigDecimal amount;
-
-    @Column(nullable = false)
     private LocalDate date;
-
-    @Column(nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private String transactionType;  // Expense or Income
+    @Column(name = "transaction_type")
+    private String transactionType;
+
+    @Column(name = "category_id")
+    private Long categoryId;
+
+    @Column(name = "currency_id")
+    private Long currencyId;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public BigDecimal getAmount() {
@@ -99,5 +68,29 @@ public class Transaction {
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public Long getCurrencyId() {
+        return currencyId;
+    }
+
+    public void setCurrencyId(Long currencyId) {
+        this.currencyId = currencyId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

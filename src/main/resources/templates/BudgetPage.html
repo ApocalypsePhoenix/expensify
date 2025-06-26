@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,64 +8,67 @@
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
-            </div>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Bills</a></li>
-                <li><a href="#">Budgets</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
-
-        <!-- Main Content -->
-        <div class="content">
-            <header>
-                <h1>Budgets</h1>
-                <p class="subheading">Monitor your spending against set budgets for various categories.</p>
-                <button class="btn-create-budget">+ Create Budget</button>
-            </header>
-
-            <section class="budget-list">
-                <!-- Budget Cards -->
-                <div class="budget-container">
-                    <div class="budget-card">
-                        <div class="budget-details">
-                            <h3>Food & Drink</h3>
-                            <p class="budget-type">Monthly Budget</p>
-                            <p class="budget-spent">Spent: $150.75</p>
-                            <p class="budget-limit">Limit: $400.00</p>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 37.69%;"></div>
-                        </div>
-                        <p class="remaining">$249.25 Remaining</p>
-                        <span class="status on-track">On Track</span>
-                    </div>
-
-                    <div class="budget-card">
-                        <div class="budget-details">
-                            <h3>Entertainment</h3>
-                            <p class="budget-type">Monthly Budget</p>
-                            <p class="budget-spent">Spent: $30.00</p>
-                            <p class="budget-limit">Limit: $100.00</p>
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 30%;"></div>
-                        </div>
-                        <p class="remaining">$70.00 Remaining</p>
-                        <span class="status on-track">On Track</span>
-                    </div>
-                </div>
-            </section>
-        </div>
+        <ul>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <h1>Budgets</h1>
+            <p class="subheading">Monitor your spending against set budgets for various categories.</p>
+            <form th:action="@{/budgets/add}" method="get">
+                <button type="submit" class="btn-create-budget">+ Create Budget</button>
+            </form>
+        </header>
+
+        <section class="budget-list">
+            <div class="budget-container">
+                <div class="budget-card" th:each="view : ${budgets}"
+                     th:with="percent=${view.spent.divide(view.budget.limitAmount, 2, T(java.math.RoundingMode).HALF_UP).multiply(new java.math.BigDecimal('100'))}">
+
+                    <div class="budget-details">
+                        <h3 th:text="${categoryMap[view.budget.categoryId]}">Category Name</h3>
+                        <p class="budget-type" th:text="${view.budget.period + ' Budget'}">Monthly Budget</p>
+                        <p class="budget-spent">Spent: RM <span th:text="${view.spent}">0.00</span></p>
+                        <p class="budget-limit">Limit: RM <span th:text="${view.budget.limitAmount}">0.00</span></p>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"
+                             th:style="'width:' + percent + '%'"
+                             th:classappend="' ' + (${view.status} == 'On Track' ? 'on-track' :
+                                                (${view.status} == 'Approaching Limit' ? 'approaching-limit' :
+                                                (${view.status} == 'Limit Reached' ? 'limit-reached' : 'exceeding-limit')))">
+                        </div>
+                    </div>
+
+                    <p class="remaining">
+                        <span th:text="${view.budget.limitAmount.subtract(view.spent)}">0.00</span> Remaining
+                    </p>
+
+                    <span class="status"
+                          th:text="${view.status}"
+                          th:classappend="' ' + (${view.status} == 'On Track' ? 'on-track' :
+                                             (${view.status} == 'Approaching Limit' ? 'approaching-limit' :
+                                             (${view.status} == 'Limit Reached' ? 'limit-reached' : 'exceeding-limit')))">
+                    </span>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 
 </body>
 </html>

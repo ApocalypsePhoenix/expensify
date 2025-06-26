@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,65 +8,74 @@
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
-            </div>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Bills</a></li>
-                <li><a href="#">Budgets</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
+        <ul>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
+    </div>
 
-        <!-- Main Content -->
-        <div class="content">
-            <header>
-                <h1>Settings</h1>
-                <p>Manage your account settings and preferences.</p>
-            </header>
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <h1>Settings</h1>
+            <p>Manage your account settings and preferences.</p>
+        </header>
 
-            <section class="profile-settings">
-                <h2>Profile</h2>
-                <p>Update your personal information.</p>
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" id="fullname" name="fullname" value="John Doe" required>
-                    </div>
+        <form th:action="@{/users/settings}" method="POST">
+            <div class="settings-grid">
 
-                    <div class="input-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="john.doe@example.com" required>
+                <!-- Profile Settings Card -->
+                <section class="profile-settings">
+                    <h2>Profile</h2>
+                    <p>Update your personal information.</p>
+
+                    <div class="grid-2col">
+                        <div class="input-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="name" th:value="${user.name}" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" th:value="${user.email}" required>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-save-profile">Save Profile</button>
-                </form>
-            </section>
+                </section>
 
-            <section class="preferences-settings">
-                <h2>Preferences</h2>
-                <p>Customize your app experience.</p>
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <label for="currency">Default Currency</label>
-                        <select id="currency" name="currency">
-                            <option value="USD" selected>USD - US Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="GBP">GBP - British Pound</option>
-                        </select>
+                <!-- Preferences Settings Card -->
+                <section class="preferences-settings">
+                    <h2>Preferences</h2>
+                    <p>Customize your app experience.</p>
+
+                    <div class="grid-2col">
+                        <div class="input-group">
+                            <label for="currency">Default Currency</label>
+                            <select id="currency" name="currency">
+                                <option th:each="c : ${currencies}"
+                                        th:value="${c.id}"
+                                        th:selected="${user.defaultCurrency != null and c.id == user.defaultCurrency.id}"
+                                        th:text="${c.currencyCode + ' - ' + c.currencySymbol}">Currency</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-save-preferences">Save Preferences</button>
-                </form>
-            </section>
-        </div>
+                </section>
+
+            </div>
+        </form>
     </div>
+</div>
 
 </body>
 </html>

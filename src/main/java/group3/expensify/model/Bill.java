@@ -2,6 +2,7 @@ package group3.expensify.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,21 +13,91 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+    private BigDecimal amount;
+    private LocalDate dueDate;
+    private String recurrence;
+    private String category;
+    private String status;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String name;
+    // Add reminder_time field
+    private LocalDateTime reminderTime;  // LocalDateTime to store the reminder time
 
-    @Column(nullable = false)
-    private BigDecimal amount;
+    // Getter and Setter methods
+    public Long getId() {
+        return id;
+    }
 
-    @Column(nullable = false)
-    private LocalDateTime dueDate;
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @Column(nullable = false)
-    private LocalDateTime reminderTime;
+    public String getName() {
+        return name;
+    }
 
-    // Getters and Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(String recurrence) {
+        this.recurrence = recurrence;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDateTime getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(LocalDateTime reminderTime) {
+        this.reminderTime = reminderTime;
+    }
 }
+

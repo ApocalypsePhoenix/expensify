@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Bill Reminder - EXPEN$IFY</title>
+  <link rel="stylesheet" href="/css/editbill.css">
+</head>
+<body>
+
+<div class="wrapper">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
+    </div>
+    <ul>
+      <li><a th:href="@{/transactions}">Transactions</a></li>
+      <li><a th:href="@{/bills}">Bills</a></li>
+      <li><a th:href="@{/budgets}">Budgets</a></li>
+      <li><a th:href="@{/reports}">Reports</a></li>
+      <li><a th:href="@{/users/settings}">Settings</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <header>
+      <div class="header-text">
+        <h1>Edit Bill Reminder</h1>
+        <p>Update the details for your bill reminder below.</p>
+      </div>
+    </header>
+
+    <section class="bill-form-section">
+      <h3>Bill Details</h3>
+      <p class="bill-description">Update the form to edit an existing bill reminder.</p>
+
+      <form th:action="@{/bills/edit/{id}(id=${bill.id})}" method="POST">
+        <div class="input-group">
+          <label for="bill-name">Bill Name</label>
+          <input type="text" id="bill-name" name="bill-name" th:value="${bill.name}" placeholder="e.g., Netflix Subscription, Rent" required>
+        </div>
+
+        <div class="input-group">
+          <label for="amount">Amount (in your default currency)</label>
+          <input type="number" id="amount" name="amount" step="0.01" th:value="${bill.amount}" placeholder="0.00" required>
+        </div>
+
+        <div class="input-group">
+          <label for="due-date">Due Date</label>
+          <input type="date" id="due-date" name="due-date" th:value="${bill.dueDate}" required>
+        </div>
+
+        <div class="input-group">
+          <label for="recurrence">Recurrence</label>
+          <select id="recurrence" name="recurrence" required>
+            <option th:value="monthly" th:selected="${bill.recurrence == 'monthly'}">Monthly</option>
+            <option th:value="yearly" th:selected="${bill.recurrence == 'yearly'}">Yearly</option>
+            <option th:value="weekly" th:selected="${bill.recurrence == 'weekly'}">Weekly</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" name="category" th:value="${bill.category}" placeholder="e.g., Entertainment, Housing, Utilities" required>
+        </div>
+
+        <button type="submit" class="btn-submit">Save Changes</button>
+      </form>
+    </section>
+  </div>
+</div>
+
+</body>
+</html>

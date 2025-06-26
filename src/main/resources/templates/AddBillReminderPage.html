@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,70 +8,75 @@
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
-            </div>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Bills</a></li>
-                <li><a href="#">Budgets</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
-
-        <!-- Main Content -->
-        <div class="content">
-            <header>
-                <div class="header-text">
-                    <h1>Add New Bill</h1>
-                    <p>Enter the details for your new bill reminder.</p>
-                </div>
-            </header>
-
-            <section class="bill-form-section">
-                <h3>Bill Details</h3>
-                <p class="bill-description">Fill in the form to add a new bill.</p>
-
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <label for="bill-name">Bill Name</label>
-                        <input type="text" id="bill-name" name="bill-name" placeholder="e.g., Netflix Subscription, Rent" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="amount">Amount (in your default currency)</label>
-                        <input type="number" id="amount" name="amount" step="0.01" placeholder="0.00" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="due-date">Due Date</label>
-                        <input type="date" id="due-date" name="due-date" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="recurrence">Recurrence</label>
-                        <select id="recurrence" name="recurrence" required>
-                            <option value="monthly">Monthly</option>
-                            <option value="yearly">Yearly</option>
-                            <option value="weekly">Weekly</option>
-                        </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="category">Category</label>
-                        <input type="text" id="category" name="category" placeholder="e.g., Entertainment, Housing, Utilities" required>
-                    </div>
-
-                    <button type="submit" class="btn-submit">Add Bill</button>
-                </form>
-            </section>
-        </div>
+        <ul>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
     </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <div class="header-text">
+                <h1>Add New Bill</h1>
+                <p>Enter the details for your new bill reminder.</p>
+            </div>
+        </header>
+
+        <section class="bill-form-section">
+            <h3>Bill Details</h3>
+            <p class="bill-description">Fill in the form to add a new bill.</p>
+
+            <form action="#" method="POST">
+                <div class="input-group">
+                    <label for="bill-name">Bill Name</label>
+                    <input type="text" id="bill-name" name="bill-name" placeholder="e.g., Netflix Subscription, Rent" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="amount">Amount (in your default currency)</label>
+                    <input type="number" id="amount" name="amount" step="0.01" placeholder="0.00" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="due-date">Due Date</label>
+                    <input type="date" id="due-date" name="due-date" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="recurrence">Recurrence</label>
+                    <select id="recurrence" name="recurrence" required>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Yearly">Yearly</option>
+                        <option value="Weekly">Weekly</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" placeholder="e.g., Entertainment, Housing, Utilities" required>
+                </div>
+
+                <!-- Reminder Time Field -->
+                <div class="input-group">
+                    <label for="reminder-time">Reminder Time</label>
+                    <input type="datetime-local" id="reminder-time" name="reminder-time" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Add Bill</button>
+            </form>
+        </section>
+    </div>
+</div>
 
 </body>
 </html>

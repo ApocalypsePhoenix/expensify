@@ -5,17 +5,19 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "currencies")
 public class Currency {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String currencyCode;
-
-    @Column(nullable = false)
     private String currencySymbol;
 
-    // Getters and Setters
-}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
+    public String getCurrencyCode() { return currencyCode; }
+    public void setCurrencyCode(String currencyCode) { this.currencyCode = currencyCode; }
+
+    public String getCurrencySymbol() { return currencySymbol; }
+    public void setCurrencySymbol(String currencySymbol) { this.currencySymbol = currencySymbol; }
+}

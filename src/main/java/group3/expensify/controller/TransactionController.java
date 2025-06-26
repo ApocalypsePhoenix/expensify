@@ -1,78 +1,96 @@
 package group3.expensify.controller;
 
-import group3.expensify.model.Category;
-import group3.expensify.model.Currency;
 import group3.expensify.model.Transaction;
 import group3.expensify.model.User;
 import group3.expensify.service.CategoryService;
-import group3.expensify.service.CurrencyService;
 import group3.expensify.service.TransactionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/transactions")
 public class TransactionController {
 
     @Autowired
-    private TransactionService transactionService;
-
-    @Autowired
     private CategoryService categoryService;
 
     @Autowired
-    private CurrencyService currencyService;
+    private TransactionService transactionService;
 
-    // Display all transactions for the logged-in user
     @GetMapping
-    public String showTransactionsPage(Model model) {
-        Long userId = 1L;  // Replace with actual user ID from session or security context
-        model.addAttribute("transactions", transactionService.getTransactionsByUser(userId));  // Fetch transactions for the user
-        return "transactionsPage";  // Render the transactionsPage.html
+    public String showTransactions(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+        List<Transaction> transactions = transactionService.getTransactionsByUserId(user.getId());
+        model.addAttribute("transactions", transactions);
+
+        // Prepare category map for displaying category names
+        Map<Long, String> categoryMap = categoryService.getAllCategories().stream()
+                .collect(Collectors.toMap(c -> c.getId(), c -> c.getName()));
+        model.addAttribute("categoryMap", categoryMap);
+
+        return "TransactionsPage";
     }
 
-    // Show the Add Transaction Page (GET request)
     @GetMapping("/add")
-    public String showAddTransactionPage() {
-        return "AddTransactionPage";  // Render the AddTransactionPage.html for adding a new transaction
+    public String showAddForm() {
+        return "AddTransactionPage";
     }
 
-    // Add a transaction (POST request from the form submission)
     @PostMapping("/add")
-    public String addTransaction(Transaction transaction,
-                                 @RequestParam("category") Long categoryId,  // Get category ID
-                                 @RequestParam("currency") Long currencyId,  // Get currency ID
-                                 @RequestParam("transaction_type") String transactionType) {  // Get transaction type
+    public String addTransaction(@RequestParam Map<String, String> form, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
 
-        // Fetch the Category and Currency using their IDs
-        Category transactionCategory = categoryService.getCategoryById(categoryId);  // Get category by ID
-        Currency transactionCurrency = currencyService.getCurrencyById(currencyId);  // Get currency by ID
+        Transaction tx = new Transaction();
+        tx.setDate(LocalDate.parse(form.get("date")));
+        tx.setDescription(form.get("description"));
+        tx.setAmount(new BigDecimal(form.get("amount")));
+        tx.setTransactionType(form.get("transaction_type"));
+        tx.setCategoryId(Long.parseLong(form.get("category")));
+        tx.setCurrencyId(Long.parseLong(form.get("currency")));
+        tx.setUserId(user.getId());
 
-        // Ensure valid Category and Currency were found
-        if (transactionCategory == null || transactionCurrency == null) {
-            return "redirect:/transactions/add?error=Invalid category or currency";  // Error handling if category or currency is invalid
-        }
+        transactionService.saveTransaction(tx);
+        return "redirect:/transactions";
+    }
 
-        // Set the Category, Currency, and Transaction Type in the Transaction object
-        transaction.setCategory(transactionCategory);
-        transaction.setCurrency(transactionCurrency);
-        transaction.setTransactionType(transactionType);  // Set the transaction type (Expense/Income)
+    // Edit Transaction
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Transaction transaction = transactionService.getTransactionById(id);
+        model.addAttribute("transaction", transaction);
+        return "EditTransactionPage"; // You need to create this page
+    }
 
-        // Set the User (user ID is hardcoded here, but it should be fetched from session)
-        Long userId = 1L;  // Replace with actual user ID (session-based or from security context)
-        User user = new User();
-        user.setId(userId);
-        transaction.setUser(user);  // Associate the user with the transaction
+    @PostMapping("/edit/{id}")
+    public String updateTransaction(@PathVariable Long id, @RequestParam Map<String, String> form) {
+        Transaction transaction = transactionService.getTransactionById(id);
+        transaction.setDate(LocalDate.parse(form.get("date")));
+        transaction.setDescription(form.get("description"));
+        transaction.setAmount(new BigDecimal(form.get("amount")));
+        transaction.setTransactionType(form.get("transaction_type"));
+        transaction.setCategoryId(Long.parseLong(form.get("category")));
+        transaction.setCurrencyId(Long.parseLong(form.get("currency")));
 
-        // Save the transaction to the database
-        transactionService.createTransaction(transaction);
+        transactionService.updateTransaction(transaction);
+        return "redirect:/transactions";
+    }
 
-        // Redirect to the transactions page after adding the transaction
+    // Delete Transaction
+    @PostMapping("/delete/{id}")
+    public String deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteTransaction(id);
         return "redirect:/transactions";
     }
 }

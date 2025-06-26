@@ -1,7 +1,6 @@
 package group3.expensify.service;
 
 import group3.expensify.model.Bill;
-import group3.expensify.model.User;
 import group3.expensify.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,29 @@ public class BillService {
     @Autowired
     private BillRepository billRepository;
 
-    // Get all bills for a user
-    public List<Bill> getBillsByUser(Long userId) {
-        User user = new User();  // Ideally, fetch user from database or security context
-        user.setId(userId);
-        return billRepository.findByUser(user);
+    public List<Bill> getBillsByUserId(Long userId) {
+        return billRepository.findByUserId(userId);
     }
 
-    // Create a new bill
-    public Bill createBill(Bill bill) {
-        return billRepository.save(bill);
+    public void saveBill(Bill bill) {
+        billRepository.save(bill);  // Save the bill in the database
+    }
+
+    public Bill getBillById(Long id) {
+        return billRepository.findById(id).orElseThrow(() -> new RuntimeException("Bill not found"));
+    }
+
+    public void updateBill(Bill bill) {
+        billRepository.save(bill);  // Save the updated bill
+    }
+
+    public void deleteBill(Long id) {
+        billRepository.deleteById(id);  // Delete the bill by ID
+    }
+
+    public void markBillAsPaid(Long id) {
+        Bill bill = billRepository.findById(id).orElseThrow(() -> new RuntimeException("Bill not found"));
+        bill.setStatus("Paid");  // Change status to Paid
+        billRepository.save(bill);
     }
 }

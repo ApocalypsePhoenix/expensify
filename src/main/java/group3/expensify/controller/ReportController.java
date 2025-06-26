@@ -1,35 +1,51 @@
 package group3.expensify.controller;
 
-import group3.expensify.model.Report;
+import group3.expensify.model.User;
 import group3.expensify.service.ReportService;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/reports")
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
 
-    // Get all reports for a user
-    @GetMapping("/user/{userId}")
-    public List<Report> getReportsByUser(@PathVariable Long userId) {
-        return reportService.getReportsByUser(userId);  // Fetch reports based on the userId
+    @GetMapping
+    public String showReportPage(@RequestParam(defaultValue = "monthly") String period, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+        Map<String, BigDecimal> data = reportService.getCategoryTotalsByPeriod(user.getId(), period);
+        model.addAttribute("categoriesJs", data.keySet());
+        model.addAttribute("totalsJs", data.values());
+        model.addAttribute("selectedPeriod", period);
+
+        return "GenerateReportPage";
     }
 
-    // Create a new report (if needed for manually created reports)
-    @PostMapping
-    public Report createReport(@RequestBody Report report) {
-        return reportService.createReport(report);  // Save the manually provided report to the database
-    }
+    @PostMapping("/generate")
+    public void generateReport(@RequestParam String reportPeriod, HttpSession session, HttpServletResponse response) throws Exception {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) {
+            response.sendRedirect("/users/login");
+            return;
+        }
 
-    // Generate a new report (e.g., generate report from transactions)
-    @GetMapping("/generate/{userId}")
-    public Report generateReport(@PathVariable Long userId) {
-        // Generate a report dynamically based on user's transaction data
-        return reportService.generateReportForUser(userId);  // Call the service method to generate the report
+        ByteArrayOutputStream pdf = reportService.generatePdf(user.getId(), reportPeriod);
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=expensify-report.pdf");
+        response.getOutputStream().write(pdf.toByteArray());
+        response.getOutputStream().flush();
     }
 }

@@ -1,13 +1,18 @@
 package group3.expensify.controller;
 
 import group3.expensify.model.Receipt;
+import group3.expensify.model.User;
 import group3.expensify.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/receipts")
 public class ReceiptController {
 
@@ -24,5 +29,17 @@ public class ReceiptController {
     @PostMapping
     public Receipt createReceipt(@RequestBody Receipt receipt) {
         return receiptService.createReceipt(receipt);
+    }
+
+    // Process receipt OCR and create transaction
+    @PostMapping("/ocr")
+    public String processReceiptOCR(@RequestParam("file") MultipartFile file,
+                                    HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+
+        receiptService.processReceiptWithOCR(file, user.getId());
+        return "redirect:/transactions";
     }
 }

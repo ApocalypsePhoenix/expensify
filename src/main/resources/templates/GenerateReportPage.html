@@ -1,101 +1,113 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate Reports - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/report.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
-            </div>
-            <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Bills</a></li>
-                <li><a href="#">Budgets</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
-            </ul>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
-
-        <!-- Main Content -->
-        <div class="content">
-            <header>
-                <h1>Generate Reports</h1>
-                <p>Select report criteria and view your financial summary.</p>
-            </header>
-
-            <section class="report-options">
-                <h3>Report Options</h3>
-                <form action="#" method="POST">
-                    <div class="input-group">
-                        <label for="report-period">Report Period</label>
-                        <select id="report-period" name="report-period">
-                            <option value="monthly">Monthly Report</option>
-                            <option value="quarterly">Quarterly Report</option>
-                            <option value="yearly">Yearly Report</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-download-pdf">Download PDF</button>
-                </form>
-            </section>
-
-            <section class="expense-breakdown">
-                <h3>Expense Breakdown by Category</h3>
-                <p class="description">Visual summary of your expenses distributed across different categories for the selected period.</p>
-                
-                <!-- Pie Chart Canvas -->
-                <div class="chart-container">
-                    <canvas id="expenseChart" width="400" height="400"></canvas> <!-- Explicit size for the chart -->
-                </div>
-            </section>
-        </div>
+        <ul>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
     </div>
 
-    <script>
-        // Data for Pie Chart
-        const data = {
-            labels: ['Food & Drink', 'Transport', 'Utilities', 'Entertainment'], // Category names
-            datasets: [{
-                label: 'Expense Breakdown',
-                data: [40, 25, 16, 11], // Percentage of each category
-                backgroundColor: ['#28a745', '#ff6347', '#007bff', '#ffc107'], // Colors for each category
-                hoverOffset: 4 // Slight offset when hovering
-            }]
-        };
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <h1>Generate Reports</h1>
+            <p>Select report criteria and download your financial summary.</p>
+        </header>
 
-        // Config for the Pie Chart
-        const config = {
-            type: 'pie',
-            data: data,
-            options: {
-                responsive: false, // Disable responsiveness for the fixed size
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(tooltipItem) {
-                                // Display the percentage in the tooltip
-                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';
-                            }
+        <section class="report-main">
+            <!-- Left: Options -->
+            <div class="report-options">
+                <h3>Report Options</h3>
+                <form id="reportFilterForm" method="get" th:action="@{/reports}">
+                    <label for="reportPeriod">Select Report Period:</label>
+                    <select id="reportPeriod" name="period" onchange="document.getElementById('reportFilterForm').submit();">
+                        <option th:value="daily" th:selected="${selectedPeriod == 'daily'}">Daily</option>
+                        <option th:value="weekly" th:selected="${selectedPeriod == 'weekly'}">Weekly</option>
+                        <option th:value="monthly" th:selected="${selectedPeriod == 'monthly'}">Monthly</option>
+                        <option th:value="yearly" th:selected="${selectedPeriod == 'yearly'}">Yearly</option>
+                    </select>
+                </form>
+
+                <form method="post" th:action="@{/reports/generate}">
+                    <input type="hidden" name="reportPeriod" th:value="${selectedPeriod}" />
+                    <button type="submit" class="btn-download-pdf">Download PDF</button>
+                </form>
+            </div>
+
+            <!-- Right: Chart -->
+            <div class="expense-breakdown">
+                <h3>Expense Breakdown</h3>
+                <p class="description">Visual summary of your expenses by category.</p>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<!-- Injected chart data -->
+<script th:inline="javascript">
+    let chartLabels = [[${categoriesJs}]];
+    let chartData = [[${totalsJs}]];
+</script>
+
+<script>
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    const labels = typeof chartLabels !== 'undefined' ? chartLabels : [];
+    const dataValues = typeof chartData !== 'undefined' ? chartData : [];
+
+    const data = {
+        labels: labels,
+        datasets: [{
+            data: dataValues,
+            backgroundColor: [
+                '#28a745', '#ff6347', '#007bff', '#ffc107', '#6f42c1', '#20c997', '#fd7e14'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((sum, value) => sum + value, 0);
+                            const current = context.raw;
+                            const percentage = total > 0 ? ((current / total) * 100).toFixed(1) : 0;
+                            return `${context.label}: RM ${current} (${percentage}%)`;
                         }
                     }
                 }
             }
-        };
+        }
+    };
 
-        // Render the Pie Chart
-        var expenseChart = new Chart(document.getElementById('expenseChart'), config);
-    </script>
+    new Chart(ctx, config);
+</script>
 
 </body>
 </html>

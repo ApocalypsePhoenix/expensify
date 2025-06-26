@@ -65,6 +65,7 @@ body, html {
     justify-content: flex-start;
     height: 100%;
     align-items: center; /* Center the content */
+    margin-top: 0; /* Removed margin-top to bring it higher */
 }
 
 /* Header Section */
@@ -73,7 +74,7 @@ header {
     flex-direction: column; /* Stack the title and subheading */
     justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 0; /* Remove margin to make it closer to the card */
 }
 
 header h1 {
@@ -88,23 +89,23 @@ header p {
     margin-bottom: 20px;
 }
 
-/* Form Section */
-.budget-form-section {
+/* Bill Form Section */
+.bill-form-section {
     background-color: white;
     border-radius: 8px;
     padding: 30px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     width: 600px; /* Wider card */
-    margin-top: 20px; /* Adjust to bring the card higher */
+    margin-top: 0; /* Removed margin-top to bring it higher */
 }
 
-.budget-form-section h3 {
+.bill-form-section h3 {
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-.budget-description {
+.bill-description {
     font-size: 14px;
     color: #6c757d;
     margin-bottom: 20px;

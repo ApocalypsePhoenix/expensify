@@ -5,23 +5,26 @@ import group3.expensify.repository.CurrencyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CurrencyService {
-
     @Autowired
     private CurrencyRepository currencyRepository;
 
-    // Get currency by currency code
     public Currency getCurrencyByCode(String currencyCode) {
-        return currencyRepository.findByCurrencyCode(currencyCode);  // Fetch currency by its code
+        return currencyRepository.findByCurrencyCode(currencyCode).orElse(null);
     }
 
-    // Create a new currency
     public Currency createCurrency(Currency currency) {
-        return currencyRepository.save(currency);  // Save the new currency to the database
+        return currencyRepository.save(currency);
     }
 
     public Currency getCurrencyById(Long id) {
-        return currencyRepository.findById(id).orElse(null);  // Fetch currency by ID
+        return currencyRepository.findById(id).orElse(null);
+    }
+
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.findAll();
     }
 }

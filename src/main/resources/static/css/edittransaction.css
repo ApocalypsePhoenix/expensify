@@ -68,18 +68,10 @@ body, html {
 }
 
 /* Header Section */
-header {
-    display: flex;
-    flex-direction: column; /* Stack the title and subheading */
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
 header h1 {
     font-size: 30px;
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 header p {
@@ -88,23 +80,23 @@ header p {
     margin-bottom: 20px;
 }
 
-/* Form Section */
-.budget-form-section {
+/* Transaction Form Section */
+.transaction-form-section {
     background-color: white;
     border-radius: 8px;
     padding: 30px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     width: 600px; /* Wider card */
-    margin-top: 20px; /* Adjust to bring the card higher */
+    margin-top: 10px; /* Reduced margin-top to bring the card higher */
 }
 
-.budget-form-section h3 {
+.transaction-form-section h3 {
     font-size: 22px;
     font-weight: 600;
     margin-bottom: 20px;
 }
 
-.budget-description {
+.transaction-description {
     font-size: 14px;
     color: #6c757d;
     margin-bottom: 20px;
@@ -120,8 +112,7 @@ header p {
     display: block;
 }
 
-.input-group input,
-.input-group select {
+.input-group input, .input-group select {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -130,8 +121,22 @@ header p {
     margin-top: 5px;
 }
 
+.radio-group {
+    display: flex;
+    gap: 20px; /* Space between radio buttons */
+}
+
+.radio-group label {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.radio-group input {
+    margin-right: 5px;
+}
+
 .btn-submit {
-    width: 100%;
     background-color: #28a745;
     color: white;
     padding: 12px 20px;
@@ -140,6 +145,7 @@ header p {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    width: 100%;
 }
 
 .btn-submit:hover {

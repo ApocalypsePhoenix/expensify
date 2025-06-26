@@ -10,25 +10,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Transient
-    private String confirmpassword;  // This field is not persisted to the database
+    @ManyToOne
+    @JoinColumn(name = "default_currency_id")
+    private Currency defaultCurrency;
 
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -47,19 +57,11 @@ public class User {
         this.password = password;
     }
 
-    public String getName() {
-        return name;
+    public Currency getDefaultCurrency() {
+        return defaultCurrency;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getConfirmpassword() {
-        return confirmpassword;
-    }
-
-    public void setConfirmpassword(String confirmpassword) {
-        this.confirmpassword = confirmpassword;
+    public void setDefaultCurrency(Currency defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
     }
 }

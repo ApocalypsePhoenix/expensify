@@ -18,19 +18,19 @@ body, html {
 /* Sidebar Styles */
 .sidebar {
     background-color: #ffffff;
-    width: 250px;
+    width: 200px;
     padding: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar .logo {
     text-align: center;
-    margin-bottom: 30px;
 }
 
 .sidebar .logo-img {
-    width: 70%;
-    max-width: 180px;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
 }
 
 .sidebar ul {

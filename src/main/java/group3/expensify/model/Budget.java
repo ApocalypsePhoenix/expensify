@@ -11,20 +11,28 @@ public class Budget {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "user_id")
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "category_id")
+    private Long categoryId;
 
-    @Column(nullable = false)
-    private BigDecimal limit;
-
-    @Column(nullable = false)
-    private String timePeriod;  // daily, weekly, monthly
+    private BigDecimal limitAmount;
+    private String period;
 
     // Getters and Setters
-}
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getCategoryId() { return categoryId; }
+    public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
+
+    public BigDecimal getLimitAmount() { return limitAmount; }
+    public void setLimitAmount(BigDecimal limitAmount) { this.limitAmount = limitAmount; }
+
+    public String getPeriod() { return period; }
+    public void setPeriod(String period) { this.period = period; }
+}

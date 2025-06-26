@@ -13,13 +13,23 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    // Get transactions for a specific user
-    public List<Transaction> getTransactionsByUser(Long userId) {
-        return transactionRepository.findByUserId(userId);  // Fetch all transactions for the given user
+    public List<Transaction> getTransactionsByUserId(Long userId) {
+        return transactionRepository.findByUserId(userId);
     }
 
-    // Create a new transaction
-    public Transaction createTransaction(Transaction transaction) {
-        return transactionRepository.save(transaction);  // Save the transaction to the database
+    public void saveTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);
+    }
+
+    public Transaction getTransactionById(Long id) {
+        return transactionRepository.findById(id).orElseThrow(() -> new RuntimeException("Transaction not found"));
+    }
+
+    public void updateTransaction(Transaction transaction) {
+        transactionRepository.save(transaction);  // Same as save, but this will update if the entity exists
+    }
+
+    public void deleteTransaction(Long id) {
+        transactionRepository.deleteById(id);  // Delete the transaction by ID
     }
 }

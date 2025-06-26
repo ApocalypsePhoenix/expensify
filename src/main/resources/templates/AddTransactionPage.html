@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,15 +12,14 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
-                <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+                <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
             </div>
             <ul>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions</a></li>
-                <li><a href="#">Bills</a></li>
-                <li><a href="#">Budgets</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a th:href="@{/transactions}">Transactions</a></li>
+                <li><a th:href="@{/bills}">Bills</a></li>
+                <li><a th:href="@{/budgets}">Budgets</a></li>
+                <li><a th:href="@{/reports}">Reports</a></li>
+                <li><a th:href="@{/users/settings}">Settings</a></li>
             </ul>
         </div>
 
@@ -60,9 +59,10 @@
                     <div class="input-group">
                         <label for="currency">Currency</label>
                         <select id="currency" name="currency" required>
-                            <option value="1">USD - US Dollar</option>
-                            <option value="2">EUR - Euro</option>
-                            <option value="3">GBP - British Pound</option>
+                            <option value="1">MYR - RM (Malaysian Ringgit)</option>
+                            <option value="2">USD - $ (US Dollar)</option>
+                            <option value="3">EUR - € (Euro)</option>
+                            <option value="4">GBP - £ (British Pound)</option>
                         </select>
                     </div>
 

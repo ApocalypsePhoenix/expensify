@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transactions - EXPEN$IFY</title>
-    <link rel="stylesheet" href="/css/transaction.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="/css/transaction.css">
 </head>
 <body>
 
@@ -12,15 +12,14 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="assets/logo.png" alt="EXPEN$IFY" class="logo-img">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
         <ul>
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Transactions</a></li>
-            <li><a href="#">Bills</a></li>
-            <li><a href="#">Budgets</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
         </ul>
     </div>
 
@@ -34,8 +33,9 @@
                     <button type="submit" class="btn-add-transaction">Add Transaction</button>
                 </form>
 
-                <form action="/reports/generate/1" method="GET"> <!-- Assuming user ID is 1 -->
-                    <button type="submit" class="btn-generate-report">Generate Report</button>
+                <form th:action="@{/receipts/ocr}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" accept="image/*" required style="margin-right: 10px;">
+                    <button type="submit" class="btn-upload-ocr">Upload OCR</button>
                 </form>
             </div>
         </header>
@@ -53,16 +53,22 @@
                     <th>Category</th>
                     <th>Type</th>
                     <th>Amount</th>
+                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Render Transactions Dynamically -->
                 <tr th:each="transaction : ${transactions}">
                     <td th:text="${transaction.date}"></td>
                     <td th:text="${transaction.description}"></td>
-                    <td th:text="${transaction.category}"></td>
+                    <td th:text="${categoryMap[transaction.categoryId]}"></td>
                     <td th:text="${transaction.transactionType}"></td>
                     <td th:text="${transaction.amount}"></td>
+                    <td>
+                        <a th:href="@{/transactions/edit/{id}(id=${transaction.id})}" class="btn-action btn-edit">Edit</a>
+                        <form th:action="@{/transactions/delete/{id}(id=${transaction.id})}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-action btn-delete">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>
