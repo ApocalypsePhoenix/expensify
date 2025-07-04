@@ -54,7 +54,7 @@ public class ReceiptService {
 
             // Step 2: Perform OCR using Tesseract
             Tesseract tesseract = new Tesseract();
-            tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata"); // Ensure correct path to tessdata
+            tesseract.setDatapath("C:\\Users\\ISAC\\AppData\\Local\\Programs\\Tesseract-OCR\\tessdata"); // Ensure correct path to tessdata
             String extractedText = tesseract.doOCR(tempPath.toFile());
 
             // Step 3: Extract amount from OCR text using regex
@@ -90,15 +90,24 @@ public class ReceiptService {
 
     // Helper method to extract amount from OCR text using regex
     private BigDecimal extractAmountFromText(String text) {
-        // Regex to match a dollar amount (e.g., $11.50, $100)
-        String regex = "\\$\\s?\\d+(?:,\\d{1,3})*(?:\\.\\d{2})?";
-        Pattern pattern = Pattern.compile(regex);
+        // Match values like RM12.00, $12.00, or just 12.00
+        String regex = "(RM|\\$)?\\s?\\d+(?:,\\d{3})*(?:\\.\\d{2})?";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
-        if (matcher.find()) {
-            String amountStr = matcher.group(0).replaceAll("[^\\d.]", ""); // Remove $ and commas
-            return new BigDecimal(amountStr);
+
+        BigDecimal maxAmount = BigDecimal.ZERO;
+
+        while (matcher.find()) {
+            String amountStr = matcher.group(0).replaceAll("[^\\d.]", ""); // Clean RM/$ etc.
+            try {
+                BigDecimal amount = new BigDecimal(amountStr);
+                if (amount.compareTo(maxAmount) > 0) {
+                    maxAmount = amount; // Use the largest amount found
+                }
+            } catch (NumberFormatException ignore) {}
         }
-        return BigDecimal.ZERO;  // Default to 0 if no amount is found
+
+        return maxAmount;
     }
 
 }
