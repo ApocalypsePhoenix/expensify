@@ -17,7 +17,8 @@ public class UserService {
     @Autowired
     private CurrencyRepository currencyRepository;
 
-    public void registerUser(String name, String email, String password) {
+    public void registerUser(String name, String email, String password, String currencyCode)
+    {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
@@ -26,9 +27,9 @@ public class UserService {
         String hashedPassword = PasswordUtil.hashPassword(password);
         user.setPassword(hashedPassword);
 
-        Currency defaultCurrency = currencyRepository.findByCurrencyCode("MYR")
-                .orElseThrow(() -> new RuntimeException("Default currency MYR not found"));
-        user.setDefaultCurrency(defaultCurrency);
+        Currency selectedCurrency = currencyRepository.findByCurrencyCode(currencyCode)
+                .orElseThrow(() -> new RuntimeException("Currency " + currencyCode + " not found"));
+        user.setDefaultCurrency(selectedCurrency);
         userRepository.save(user);
     }
 

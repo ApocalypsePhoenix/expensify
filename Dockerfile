@@ -1,5 +1,11 @@
 # Use Java 21 runtime
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jdk
+
+# Install dependencies and Tesseract
+RUN apt-get update && \
+    apt-get install -y tesseract-ocr libtesseract-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app

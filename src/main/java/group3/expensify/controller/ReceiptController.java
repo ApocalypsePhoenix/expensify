@@ -36,10 +36,19 @@ public class ReceiptController {
     public String processReceiptOCR(@RequestParam("file") MultipartFile file,
                                     HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) return "redirect:/users/login";
+        if (user == null) {
+            System.out.println("User session is null. Redirecting to login.");
+            return "redirect:/users/login";
+        }
 
+        try {
+            receiptService.processReceiptWithOCR(file, user.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Optionally store error in session to display on front-end
+            session.setAttribute("ocrError", e.getMessage());
+        }
 
-        receiptService.processReceiptWithOCR(file, user.getId());
         return "redirect:/transactions";
     }
 }

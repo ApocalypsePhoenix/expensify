@@ -34,7 +34,8 @@ public class UserController {
             return "redirect:/register?error=password_mismatch";
         }
 
-        userService.registerUser(fullname, email, password);
+        String currencyCode = body.get("currency");
+        userService.registerUser(fullname, email, password, currencyCode);
         return "redirect:/users/login?success=1";
     }
 

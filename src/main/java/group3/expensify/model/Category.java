@@ -15,10 +15,19 @@ public class Category {
 
     private String description;
 
-    // Override toString() method to return category name
+    // Default constructor required by JPA
+    public Category() {}
+
+    // Constructor for quick instantiation
+    public Category(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    // Override toString() for display
     @Override
     public String toString() {
-        return name;  // Return the category name when the object is printed
+        return name;
     }
 
     // Getters and Setters

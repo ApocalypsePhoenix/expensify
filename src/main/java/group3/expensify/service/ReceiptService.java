@@ -54,7 +54,7 @@ public class ReceiptService {
 
             // Step 2: Perform OCR using Tesseract
             Tesseract tesseract = new Tesseract();
-            tesseract.setDatapath("C:\\Users\\ISAC\\AppData\\Local\\Programs\\Tesseract-OCR\\tessdata"); // Ensure correct path to tessdata
+            tesseract.setDatapath("/usr/share/tesseract-ocr/4.00/tessdata"); // Ensure correct path to tessdata
             String extractedText = tesseract.doOCR(tempPath.toFile());
 
             // Step 3: Extract amount from OCR text using regex
