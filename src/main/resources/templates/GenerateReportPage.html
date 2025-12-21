@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generate Reports - EXPEN$IFY</title>
+    <title>Financial Reports - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/report.css">
+    <!-- Font Awesome is still needed for the PDF export icon if desired, or you can remove it -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    <!-- Reverted Sidebar to Old Version -->
     <div class="sidebar">
         <div class="logo">
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
@@ -20,7 +22,7 @@
             <li><a th:href="@{/transactions}">Transactions</a></li>
             <li><a th:href="@{/bills}">Bills</a></li>
             <li><a th:href="@{/budgets}">Budgets</a></li>
-            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/reports}" class="active">Reports</a></li>
             <li><a th:href="@{/users/settings}">Settings</a></li>
         </ul>
     </div>
@@ -28,86 +30,163 @@
     <!-- Main Content -->
     <div class="content">
         <header>
-            <h1>Generate Reports</h1>
-            <p>Select report criteria and download your financial summary.</p>
-        </header>
-
-        <section class="report-main">
-            <!-- Left: Options -->
-            <div class="report-options">
-                <h3>Report Options</h3>
-                <form id="reportFilterForm" method="get" th:action="@{/reports}">
-                    <label for="reportPeriod">Select Report Period:</label>
-                    <select id="reportPeriod" name="period" onchange="document.getElementById('reportFilterForm').submit();">
-                        <option th:value="daily" th:selected="${selectedPeriod == 'daily'}">Daily</option>
-                        <option th:value="weekly" th:selected="${selectedPeriod == 'weekly'}">Weekly</option>
-                        <option th:value="monthly" th:selected="${selectedPeriod == 'monthly'}">Monthly</option>
-                        <option th:value="yearly" th:selected="${selectedPeriod == 'yearly'}">Yearly</option>
-                    </select>
-                </form>
-
+            <div class="header-main" style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; max-width: 1200px; margin: 0 auto 40px;">
+                <div>
+                    <h1>Financial Insights</h1>
+                    <p>Review your spending patterns and financial health.</p>
+                </div>
                 <form method="post" th:action="@{/reports/generate}">
                     <input type="hidden" name="reportPeriod" th:value="${selectedPeriod}" />
-                    <button type="submit" class="btn-download-pdf">Download PDF</button>
+                    <button type="submit" class="btn-download-pdf">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
                 </form>
             </div>
+        </header>
 
-            <!-- Right: Chart -->
-            <div class="expense-breakdown">
-                <h3>Expense Breakdown</h3>
-                <p class="description">Visual summary of your expenses by category.</p>
-                <div class="chart-container">
-                    <canvas id="expenseChart"></canvas>
-                </div>
+        <section class="report-controls" style="width: 100%; max-width: 1200px; margin: 0 auto 30px;">
+            <div class="filter-card" style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
+                <form id="reportFilterForm" method="get" th:action="@{/reports}">
+                    <div class="select-wrapper">
+                        <label for="reportPeriod" style="font-weight: 600; font-size: 14px; color: #4a5568; margin-right: 15px;">Time Range:</label>
+                        <select id="reportPeriod" name="period" onchange="document.getElementById('reportFilterForm').submit();" style="padding: 10px; border-radius: 8px; border: 1.5px solid #e2e8f0; font-size: 14px;">
+                            <option value="daily" th:selected="${selectedPeriod == 'daily'}">Last 24 Hours</option>
+                            <option value="weekly" th:selected="${selectedPeriod == 'weekly'}">Last 7 Days</option>
+                            <option value="monthly" th:selected="${selectedPeriod == 'monthly'}">Last 30 Days</option>
+                            <option value="yearly" th:selected="${selectedPeriod == 'yearly'}">Last 12 Months</option>
+                        </select>
+                    </div>
+                </form>
             </div>
         </section>
+
+        <!-- Improved Charts Layout -->
+        <div class="charts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px; width: 100%; max-width: 1200px; margin: 0 auto;">
+
+            <!-- Spending Breakdown -->
+            <div class="chart-card" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); min-height: 450px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 700;">Spending Breakdown</h3>
+                    <p style="font-size: 13px; color: #718096;">By Category</p>
+                </div>
+                <div class="chart-box" style="flex: 1; position: relative;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Cash Flow -->
+            <div class="chart-card" style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); min-height: 450px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 700;">Cash Flow</h3>
+                    <p style="font-size: 13px; color: #718096;">Income vs. Expense</p>
+                </div>
+                <div class="chart-box" style="flex: 1; position: relative;">
+                    <canvas id="cashFlowChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Trend Line (Full Width) -->
+            <div class="chart-card full-width" style="grid-column: 1 / -1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); min-height: 400px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 700;">Expense Trend</h3>
+                    <p style="font-size: 13px; color: #718096;">Daily spending over time</p>
+                </div>
+                <div class="chart-box trend-box" style="flex: 1; position: relative;">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Injected chart data -->
+<!-- Data Injection -->
 <script th:inline="javascript">
-    let chartLabels = [[${categoriesJs}]];
-    let chartData = [[${totalsJs}]];
+    const categoryLabels = [[${categoriesJs}]];
+    const categoryData = [[${totalsJs}]];
+    const cashFlowLabels = [[${incomeVsExpenseLabels}]];
+    const cashFlowData = [[${incomeVsExpenseData}]];
+    const trendLabels = [[${trendLabels}]];
+    const trendData = [[${trendTotals}]];
+    const currency = [[${currencySymbol}]];
 </script>
 
 <script>
-    const ctx = document.getElementById('expenseChart').getContext('2d');
-    const labels = typeof chartLabels !== 'undefined' ? chartLabels : [];
-    const dataValues = typeof chartData !== 'undefined' ? chartData : [];
+    document.addEventListener('DOMContentLoaded', function() {
+        const themeColors = ['#28a745', '#ff6347', '#007bff', '#ffc107', '#6f42c1', '#20c997', '#fd7e14'];
 
-    const data = {
-        labels: labels,
-        datasets: [{
-            data: dataValues,
-            backgroundColor: [
-                '#28a745', '#ff6347', '#007bff', '#ffc107', '#6f42c1', '#20c997', '#fd7e14'
-            ],
-            hoverOffset: 4
-        }]
-    };
-
-    const config = {
-        type: 'pie',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((sum, value) => sum + value, 0);
-                            const current = context.raw;
-                            const percentage = total > 0 ? ((current / total) * 100).toFixed(1) : 0;
-                            return `${context.label}: RM ${current} (${percentage}%)`;
-                        }
-                    }
+        // 1. Category Pie Chart
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: themeColors,
+                    borderWidth: 0,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
                 }
             }
-        }
-    };
+        });
 
-    new Chart(ctx, config);
+        // 2. Income vs Expense Bar Chart
+        new Chart(document.getElementById('cashFlowChart'), {
+            type: 'bar',
+            data: {
+                labels: cashFlowLabels,
+                datasets: [{
+                    label: 'Amount',
+                    data: cashFlowData,
+                    backgroundColor: ['#28a745', '#dc3545'],
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true, grid: { display: false } },
+                    x: { grid: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // 3. Trend Line Chart
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Daily Spending',
+                    data: trendData,
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: value => currency + ' ' + value }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
 </script>
 
 </body>
