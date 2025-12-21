@@ -38,24 +38,27 @@
                 <div class="stat-icon income-bg"><i class="fas fa-wallet"></i></div>
                 <div class="stat-details">
                     <p class="stat-label">Total Balance</p>
-                    <h2 class="stat-value">RM 5,240.00</h2>
-                    <p class="stat-change positive">+12% from last month</p>
+                    <h2 class="stat-value" th:text="${currencySymbol + ' ' + #numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
+                    <p class="stat-change" th:classappend="${balance >= 0} ? 'positive' : 'negative'"
+                       th:text="${balance >= 0 ? 'Account in Surplus' : 'Account in Deficit'}">Status</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon expense-bg"><i class="fas fa-credit-card"></i></div>
                 <div class="stat-details">
                     <p class="stat-label">Monthly Expenses</p>
-                    <h2 class="stat-value">RM 1,120.50</h2>
-                    <p class="stat-change negative">+5% from last week</p>
+                    <h2 class="stat-value" th:text="${currencySymbol + ' ' + #numbers.formatDecimal(monthlyExpenses, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
+                    <p class="stat-change muted" th:text="${#temporals.format(#temporals.createNow(), 'MMMM yyyy')}">Month</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon budget-bg"><i class="fas fa-chart-pie"></i></div>
                 <div class="stat-details">
                     <p class="stat-label">Budget Progress</p>
-                    <h2 class="stat-value">75% Used</h2>
-                    <div class="mini-progress"><div class="mini-bar" style="width: 75%"></div></div>
+                    <h2 class="stat-value" th:text="${budgetStatusText}">0% Used</h2>
+                    <div class="mini-progress">
+                        <div class="mini-bar" th:style="'width: ' + ${budgetPercent} + '%'"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -69,30 +72,21 @@
                     <a th:href="@{/transactions}" class="btn-text">View All</a>
                 </div>
                 <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="item-icon"><i class="fas fa-coffee"></i></div>
-                        <div class="item-info">
-                            <p class="item-title">Starbucks Coffee</p>
-                            <p class="item-date">Today, 10:30 AM</p>
+                    <div class="activity-item" th:each="tx : ${recentTransactions}">
+                        <div class="item-icon">
+                            <i th:class="${tx.transactionType == 'Income' ? 'fas fa-money-bill-wave' : 'fas fa-shopping-cart'}"></i>
                         </div>
-                        <p class="item-amount expense">-RM 15.00</p>
-                    </div>
-                    <div class="activity-item">
-                        <div class="item-icon income-bg"><i class="fas fa-money-bill-wave"></i></div>
                         <div class="item-info">
-                            <p class="item-title">Freelance Payment</p>
-                            <p class="item-date">Yesterday</p>
+                            <p class="item-title" th:text="${tx.description}">Transaction</p>
+                            <p class="item-date" th:text="${tx.date}">Date</p>
                         </div>
-                        <p class="item-amount income">+RM 800.00</p>
+                        <p class="item-amount"
+                           th:classappend="${tx.transactionType == 'Income' ? 'income' : 'expense'}"
+                           th:text="${(tx.transactionType == 'Income' ? '+' : '-') + currencySymbol + ' ' + tx.amount}">
+                            Amount
+                        </p>
                     </div>
-                    <div class="activity-item">
-                        <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
-                        <div class="item-info">
-                            <p class="item-title">Grocery Shopping</p>
-                            <p class="item-date">22 Jun 2025</p>
-                        </div>
-                        <p class="item-amount expense">-RM 120.40</p>
-                    </div>
+                    <p th:if="${recentTransactions.empty}" class="subheading">No recent activity.</p>
                 </div>
             </section>
 
@@ -103,20 +97,15 @@
                     <a th:href="@{/bills}" class="btn-text">Manage</a>
                 </div>
                 <div class="bill-mini-list">
-                    <div class="bill-mini-card">
+                    <div class="bill-mini-card" th:each="bill : ${upcomingBills}"
+                         th:classappend="${bill.dueDate.isBefore(#temporals.createToday().plusDays(3))} ? 'urgent' : ''">
                         <div class="bill-info">
-                            <p class="bill-name">Netflix Premium</p>
-                            <p class="bill-due">Due in 3 days</p>
+                            <p class="bill-name" th:text="${bill.name}">Bill Name</p>
+                            <p class="bill-due" th:text="'Due: ' + ${bill.dueDate}">Due Date</p>
                         </div>
-                        <p class="bill-amount">RM 55.00</p>
+                        <p class="bill-amount" th:text="${currencySymbol + ' ' + bill.amount}">Amount</p>
                     </div>
-                    <div class="bill-mini-card urgent">
-                        <div class="bill-info">
-                            <p class="bill-name">Internet Bill</p>
-                            <p class="bill-due">Due Tomorrow</p>
-                        </div>
-                        <p class="bill-amount">RM 149.00</p>
-                    </div>
+                    <p th:if="${upcomingBills.empty}" class="subheading">No upcoming bills.</p>
                 </div>
                 <div class="quick-action">
                     <button class="btn-outline" onclick="location.href='/bills/add'">+ Add New Reminder</button>

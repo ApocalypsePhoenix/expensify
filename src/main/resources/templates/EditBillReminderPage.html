@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,8 +15,10 @@
       <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
     </div>
     <ul>
+      <!-- Added Dashboard Link to match dashboard.css layout -->
+      <li><a th:href="@{/dashboard}">Dashboard</a></li>
       <li><a th:href="@{/transactions}">Transactions</a></li>
-      <li><a th:href="@{/bills}">Bills</a></li>
+      <li><a th:href="@{/bills}" class="active">Bills</a></li>
       <li><a th:href="@{/budgets}">Budgets</a></li>
       <li><a th:href="@{/reports}">Reports</a></li>
       <li><a th:href="@{/users/settings}">Settings</a></li>
@@ -26,10 +28,8 @@
   <!-- Main Content -->
   <div class="content">
     <header>
-      <div class="header-text">
-        <h1>Edit Bill Reminder</h1>
-        <p>Update the details for your bill reminder below.</p>
-      </div>
+      <h1>Edit Bill Reminder</h1>
+      <p>Update the details for your bill reminder below.</p>
     </header>
 
     <section class="bill-form-section">

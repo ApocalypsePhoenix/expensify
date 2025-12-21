@@ -1,17 +1,11 @@
-/* EXPEN$IFY - Standardized Form System
-   Target: addbill.css (Used for Add & Edit Bill Reminders)
-*/
-
+/* Standardized Sidebar & Form UI - Synced with dashboard.css */
 :root {
     --sidebar-width: 240px;
     --primary-green: #28a745;
     --primary-hover: #218838;
     --bg-light: #f8f9fa;
-    --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     --border-radius: 12px;
-    --input-border: #e2e8f0;
-    --text-dark: #1a202c;
-    --text-muted: #718096;
 }
 
 * {
@@ -22,19 +16,18 @@
 
 body, html {
     height: 100%;
-    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, sans-serif;
     background-color: var(--bg-light);
-    color: var(--text-dark);
-    line-height: 1.5;
+    color: #333;
+    line-height: normal; /* Force reset to match dashboard default */
 }
 
-/* Layout Wrapper */
 .wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar (Fixed Consistency) */
+/* Sidebar - Exact replica of dashboard.css sidebar */
 .sidebar {
     position: fixed;
     top: 0;
@@ -50,15 +43,20 @@ body, html {
 .sidebar .logo {
     text-align: center;
     margin-bottom: 40px;
+    display: block; /* Ensure block behavior */
 }
 
 .sidebar .logo-img {
     max-width: 160px;
     height: auto;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .sidebar ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .sidebar ul li {
@@ -74,6 +72,7 @@ body, html {
     padding: 12px 15px;
     border-radius: 8px;
     transition: all 0.2s ease;
+    line-height: 1.2; /* Explicit line-height for alignment */
 }
 
 .sidebar ul li a:hover,
@@ -86,13 +85,12 @@ body, html {
 .content {
     flex: 1;
     margin-left: var(--sidebar-width);
-    padding: 60px 20px;
+    padding: 40px 60px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Ensures the form is perfectly centered */
+    align-items: center;
 }
 
-/* Header Section */
 header {
     width: 100%;
     max-width: 550px;
@@ -101,18 +99,18 @@ header {
 }
 
 header h1 {
-    font-size: 30px;
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: 700;
     margin-bottom: 8px;
-    letter-spacing: -0.02em;
+    color: #1a1a1a;
 }
 
 header p {
-    color: var(--text-muted);
+    color: #6c757d;
     font-size: 16px;
 }
 
-/* Form Card - FIX: Stabilized Width and Height */
+/* Form Card */
 .bill-form-section {
     background-color: #ffffff;
     border-radius: var(--border-radius);
@@ -120,23 +118,21 @@ header p {
     box-shadow: var(--card-shadow);
     width: 100%;
     max-width: 550px;
-    transition: transform 0.3s ease;
 }
 
 .bill-form-section h3 {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 10px;
-    color: var(--text-dark);
+    color: #2d3748;
 }
 
 .bill-description {
     font-size: 14px;
-    color: var(--text-muted);
+    color: #718096;
     margin-bottom: 30px;
 }
 
-/* Form Groups */
 .input-group {
     margin-bottom: 24px;
 }
@@ -154,26 +150,17 @@ header p {
     width: 100%;
     padding: 12px 16px;
     font-size: 16px;
-    color: var(--text-dark);
-    border: 1.5px solid var(--input-border);
+    border: 1.5px solid #e2e8f0;
     border-radius: 8px;
-    background-color: #fff;
     transition: all 0.2s ease;
-}
-
-.input-group input::placeholder {
-    color: #a0aec0;
 }
 
 .input-group input:focus,
 .input-group select:focus {
     outline: none;
     border-color: var(--primary-green);
-    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-    background-color: #fff;
 }
 
-/* Button Styling */
 .btn-submit {
     width: 100%;
     background-color: var(--primary-green);
@@ -182,35 +169,17 @@ header p {
     border: none;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: 0.2s;
     margin-top: 10px;
-    box-shadow: 0 4px 6px rgba(40, 167, 69, 0.15);
 }
 
 .btn-submit:hover {
     background-color: var(--primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.2);
 }
 
-.btn-submit:active {
-    transform: translateY(0);
-}
-
-/* Responsive Handling */
 @media (max-width: 768px) {
-    .content {
-        margin-left: 0;
-        padding: 40px 15px;
-    }
-
-    .sidebar {
-        display: none; /* Mobile menu logic would go here */
-    }
-
-    .bill-form-section {
-        padding: 25px;
-    }
+    .content { margin-left: 0; padding: 40px 20px; }
+    .sidebar { display: none; }
 }

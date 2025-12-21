@@ -15,8 +15,10 @@
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
         <ul>
+            <!-- Added Dashboard Link to match dashboard.css layout -->
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
             <li><a th:href="@{/transactions}">Transactions</a></li>
-            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/bills}" class="active">Bills</a></li>
             <li><a th:href="@{/budgets}">Budgets</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>
             <li><a th:href="@{/users/settings}">Settings</a></li>
@@ -26,17 +28,15 @@
     <!-- Main Content -->
     <div class="content">
         <header>
-            <div class="header-text">
-                <h1>Add New Bill</h1>
-                <p>Enter the details for your new bill reminder.</p>
-            </div>
+            <h1>Add New Bill</h1>
+            <p>Enter the details for your new bill reminder.</p>
         </header>
 
         <section class="bill-form-section">
             <h3>Bill Details</h3>
             <p class="bill-description">Fill in the form to add a new bill.</p>
 
-            <form action="#" method="POST">
+            <form th:action="@{/bills/add}" method="POST">
                 <div class="input-group">
                     <label for="bill-name">Bill Name</label>
                     <input type="text" id="bill-name" name="bill-name" placeholder="e.g., Netflix Subscription, Rent" required>
@@ -66,7 +66,6 @@
                     <input type="text" id="category" name="category" placeholder="e.g., Entertainment, Housing, Utilities" required>
                 </div>
 
-                <!-- Reminder Time Field -->
                 <div class="input-group">
                     <label for="reminder-time">Reminder Time</label>
                     <input type="datetime-local" id="reminder-time" name="reminder-time" required>
