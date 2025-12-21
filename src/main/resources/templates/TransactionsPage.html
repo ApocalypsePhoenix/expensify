@@ -15,7 +15,9 @@
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
         <ul>
-            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <!-- FIX: Added Dashboard Link -->
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/transactions}" class="active">Transactions</a></li>
             <li><a th:href="@{/bills}">Bills</a></li>
             <li><a th:href="@{/budgets}">Budgets</a></li>
             <li><a th:href="@{/reports}">Reports</a></li>

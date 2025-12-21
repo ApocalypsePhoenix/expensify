@@ -46,7 +46,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        return "LoginPage"; // make sure this matches your actual login page
+        return "LoginPage";
     }
 
     @PostMapping("/login")
@@ -59,7 +59,8 @@ public class UserController {
         if (user != null) {
             // Login successful - store in session
             session.setAttribute("loggedInUser", user);
-            return "redirect:/transactions"; // or any page after login
+            // FIX: Redirect to dashboard instead of transactions
+            return "redirect:/dashboard";
         } else {
             // Login failed - redirect with error
             return "redirect:/users/login?error=1";
@@ -89,6 +90,7 @@ public class UserController {
         userService.updateUserSettings(loggedInUser.getId(), name, email, currency);
 
         // Update session with latest data
+        // Note: Password retrieval here might need adjustment depending on your security implementation
         User updatedUser = userService.loginUser(email, loggedInUser.getPassword());
         session.setAttribute("loggedInUser", updatedUser);
 

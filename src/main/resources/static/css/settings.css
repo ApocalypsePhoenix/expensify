@@ -1,4 +1,13 @@
-/* Reset and Base */
+/* Reset and Base Styles */
+:root {
+    --sidebar-width: 240px;
+    --primary-green: #28a745;
+    --primary-hover: #218838;
+    --bg-light: #f8f9fa;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    --border-radius: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,83 +16,85 @@
 
 body, html {
     height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg-light);
+    color: #333;
 }
 
-/* Layout */
+/* Layout Wrapper */
 .wrapper {
     display: flex;
     min-height: 100vh;
-    padding-left: 200px;
 }
 
-/* Sidebar Fixed */
+/* Sidebar (Standardized Consistency) */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 200px;
+    width: var(--sidebar-width);
     height: 100%;
     background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 1000;
 }
 
 .sidebar .logo {
     text-align: center;
+    margin-bottom: 40px;
 }
 
 .sidebar .logo-img {
-    max-width: 100%;
-    width: 100%;
+    max-width: 160px;
     height: auto;
 }
 
 .sidebar ul {
     list-style: none;
-    padding: 0;
 }
 
 .sidebar ul li {
-    margin: 15px 0;
+    margin-bottom: 8px;
 }
 
 .sidebar ul li a {
-    color: #333;
+    color: #555;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: 500;
     display: block;
-    padding: 10px;
-    border-radius: 6px;
-    transition: background-color 0.3s;
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
 }
 
 .sidebar ul li a:hover {
-    background-color: #f1f1f1;
+    background-color: #f0f7f1;
+    color: var(--primary-green);
 }
 
-/* Content */
+/* Main Content Area */
 .content {
     flex: 1;
-    padding: 40px;
-    overflow-y: auto;
+    margin-left: var(--sidebar-width);
+    padding: 40px 60px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
 }
 
-/* Header */
 header {
-    margin-bottom: 10px;
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+    align-self: center;
 }
 
 header h1 {
-    font-size: 30px;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #1a1a1a;
 }
 
 header p {
@@ -91,45 +102,48 @@ header p {
     font-size: 16px;
 }
 
-/* Cards Grid Container */
+/* Settings Grid - Uniform Look */
 .settings-grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: 30px;
     width: 100%;
+    max-width: 1200px;
+    align-self: center;
 }
 
 /* Cards */
 .profile-settings,
 .preferences-settings {
     background-color: white;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     padding: 30px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-    flex: 0 1 580px;
+    box-shadow: var(--card-shadow);
+    flex: 1 1 500px; /* Responsive flex behavior */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Section Titles */
 .profile-settings h2,
 .preferences-settings h2 {
     font-size: 22px;
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
+    color: #2d3748;
 }
 
 .profile-settings p,
 .preferences-settings p {
     font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 20px;
+    color: #718096;
+    margin-bottom: 25px;
 }
 
-/* Input Layout */
+/* Input Layout Grid */
 .grid-2col {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 20px;
 }
 
 .input-group {
@@ -138,54 +152,51 @@ header p {
 
 .input-group label {
     font-size: 14px;
-    color: #333;
+    font-weight: 600;
+    color: #4a5568;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .input-group input,
 .input-group select {
     width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-green);
 }
 
 /* Buttons */
 .btn-save-profile,
 .btn-save-preferences {
-    background-color: #28a745;
+    background-color: var(--primary-green);
     color: white;
-    padding: 12px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 10px;
+    margin-top: auto; /* Push to bottom of card */
+    align-self: flex-start;
 }
 
 .btn-save-profile:hover,
 .btn-save-preferences:hover {
-    background-color: #218838;
+    background-color: var(--primary-hover);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-    .settings-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .profile-settings,
-    .preferences-settings {
-        width: 100%;
-        max-width: 95%;
-    }
-}
-
-@media (max-width: 768px) {
+/* Responsive Overrides */
+@media (max-width: 992px) {
     .grid-2col {
         grid-template-columns: 1fr;
     }

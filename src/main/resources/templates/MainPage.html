@@ -1,64 +1,130 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="styles.css" rel="stylesheet">
+    <title>Dashboard - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Expensify</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="transactions.html">Transactions</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="profile.html">Profile</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
 
-<!-- Dashboard Content -->
-<div class="container mt-4">
-    <h2>Welcome to Your Dashboard</h2>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Transactions Overview</h5>
-                    <p class="card-text">You have completed 3/5 tasks this month.</p>
-                    <a href="transactions.html" class="btn btn-primary">View Transactions</a>
-                </div>
-            </div>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
         </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Budget Summary</h5>
-                    <p class="card-text">Your budget for this month is almost complete!</p>
-                    <a href="budget.html" class="btn btn-primary">View Budget</a>
+        <ul>
+            <li><a th:href="@{/dashboard}" class="active">Dashboard</a></li>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <h1>Welcome back, <span th:text="${user.name}">User</span>!</h1>
+            <p class="subheading">Here is what's happening with your money today.</p>
+        </header>
+
+        <!-- Stats Overview Row -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon income-bg"><i class="fas fa-wallet"></i></div>
+                <div class="stat-details">
+                    <p class="stat-label">Total Balance</p>
+                    <h2 class="stat-value">RM 5,240.00</h2>
+                    <p class="stat-change positive">+12% from last month</p>
                 </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon expense-bg"><i class="fas fa-credit-card"></i></div>
+                <div class="stat-details">
+                    <p class="stat-label">Monthly Expenses</p>
+                    <h2 class="stat-value">RM 1,120.50</h2>
+                    <p class="stat-change negative">+5% from last week</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon budget-bg"><i class="fas fa-chart-pie"></i></div>
+                <div class="stat-details">
+                    <p class="stat-label">Budget Progress</p>
+                    <h2 class="stat-value">75% Used</h2>
+                    <div class="mini-progress"><div class="mini-bar" style="width: 75%"></div></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Widgets -->
+        <div class="dashboard-widgets">
+            <!-- Recent Transactions Widget -->
+            <section class="widget recent-activity">
+                <div class="widget-header">
+                    <h3>Recent Transactions</h3>
+                    <a th:href="@{/transactions}" class="btn-text">View All</a>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-icon"><i class="fas fa-coffee"></i></div>
+                        <div class="item-info">
+                            <p class="item-title">Starbucks Coffee</p>
+                            <p class="item-date">Today, 10:30 AM</p>
+                        </div>
+                        <p class="item-amount expense">-RM 15.00</p>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-icon income-bg"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="item-info">
+                            <p class="item-title">Freelance Payment</p>
+                            <p class="item-date">Yesterday</p>
+                        </div>
+                        <p class="item-amount income">+RM 800.00</p>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-icon"><i class="fas fa-shopping-bag"></i></div>
+                        <div class="item-info">
+                            <p class="item-title">Grocery Shopping</p>
+                            <p class="item-date">22 Jun 2025</p>
+                        </div>
+                        <p class="item-amount expense">-RM 120.40</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upcoming Bills Widget -->
+            <section class="widget upcoming-bills">
+                <div class="widget-header">
+                    <h3>Upcoming Bills</h3>
+                    <a th:href="@{/bills}" class="btn-text">Manage</a>
+                </div>
+                <div class="bill-mini-list">
+                    <div class="bill-mini-card">
+                        <div class="bill-info">
+                            <p class="bill-name">Netflix Premium</p>
+                            <p class="bill-due">Due in 3 days</p>
+                        </div>
+                        <p class="bill-amount">RM 55.00</p>
+                    </div>
+                    <div class="bill-mini-card urgent">
+                        <div class="bill-info">
+                            <p class="bill-name">Internet Bill</p>
+                            <p class="bill-due">Due Tomorrow</p>
+                        </div>
+                        <p class="bill-amount">RM 149.00</p>
+                    </div>
+                </div>
+                <div class="quick-action">
+                    <button class="btn-outline" onclick="location.href='/bills/add'">+ Add New Reminder</button>
+                </div>
+            </section>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

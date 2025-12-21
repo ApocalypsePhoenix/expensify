@@ -1,4 +1,13 @@
-/* General Styles */
+/* Reset and Base Styles */
+:root {
+    --sidebar-width: 240px;
+    --primary-green: #28a745;
+    --primary-hover: #218838;
+    --bg-light: #f8f9fa;
+    --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --border-radius: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -7,28 +16,28 @@
 
 body, html {
     height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg-light);
+    color: #333;
 }
 
-/* Wrapper for all content */
+/* Layout Wrapper */
 .wrapper {
     display: flex;
     height: 100vh;
     width: 100%;
-    padding-left: 200px; /* leave space for sidebar */
 }
 
-/* Sidebar (Fixed) */
+/* Sidebar (Consistent with Dashboard) */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
-    width: 200px;
+    width: var(--sidebar-width);
     background-color: #ffffff;
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 1000;
 }
 
@@ -38,40 +47,17 @@ body, html {
 }
 
 .sidebar .logo-img {
-    max-width: 100%;
+    max-width: 160px;
     height: auto;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin: 15px 0;
-}
-
-.sidebar ul li a {
-    color: #333;
-    text-decoration: none;
-    font-size: 18px;
-    display: block;
-    padding: 10px;
-    border-radius: 6px;
-    transition: background-color 0.3s;
-}
-
-.sidebar ul li a:hover {
-    background-color: #f1f1f1;
 }
 
 /* Content Area */
 .content {
     flex: 1;
+    margin-left: var(--sidebar-width);
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f4f4f4;
     padding: 20px;
 }
 
@@ -79,22 +65,24 @@ body, html {
 .login-container {
     background-color: #fff;
     padding: 40px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    width: 380px;
+    box-shadow: var(--card-shadow);
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 400px;
     text-align: center;
 }
 
 .login-container h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+    margin-bottom: 12px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1a1a;
 }
 
 .login-container p {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 20px;
+    font-size: 15px;
+    color: #718096;
+    margin-bottom: 30px;
 }
 
 .input-group {
@@ -104,43 +92,54 @@ body, html {
 
 .input-group label {
     font-size: 14px;
-    color: #333;
+    font-weight: 600;
+    color: #4a5568;
     display: block;
+    margin-bottom: 8px;
 }
 
 .input-group input {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
+    padding: 12px 16px;
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-green);
 }
 
 .btn {
     width: 100%;
-    padding: 12px;
-    background-color: #28a745;
+    padding: 14px;
+    background-color: var(--primary-green);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.2s;
+    margin-top: 10px;
 }
 
 .btn:hover {
-    background-color: #218838;
+    background-color: var(--primary-hover);
 }
 
 .register-link {
     font-size: 14px;
-    margin-top: 20px;
+    margin-top: 25px;
+    color: #718096;
 }
 
 .register-link a {
-    color: #007bff;
+    color: #3182ce;
     text-decoration: none;
+    font-weight: 600;
 }
 
 .register-link a:hover {
