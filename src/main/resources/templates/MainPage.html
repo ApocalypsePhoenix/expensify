@@ -6,11 +6,72 @@
     <title>Dashboard - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .quick-actions-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+        .action-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .action-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary-green);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: #f0f7f1;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .action-text h4 { font-size: 15px; font-weight: 700; margin: 0; }
+        .action-text p { font-size: 12px; color: #718096; margin: 0; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chart-widget {
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <!-- Sidebar -->
+    <!-- Original Sidebar preserved exactly -->
     <div class="sidebar">
         <div class="logo">
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
@@ -28,34 +89,56 @@
     <!-- Main Content -->
     <div class="content">
         <header>
-            <h1>Welcome back, <span th:text="${user.name}">User</span>!</h1>
-            <p class="subheading">Here is what's happening with your money today.</p>
+            <h1>Hello, <span th:text="${user.name}">User</span>!</h1>
+            <p class="subheading" th:text="'Summary for ' + ${#temporals.format(#temporals.createNow(), 'MMMM yyyy')}">Summary</p>
         </header>
 
-        <!-- Stats Overview Row -->
+        <!-- Quick Actions Row -->
+        <section class="quick-actions-bar">
+            <a href="/transactions/add" class="action-card">
+                <div class="action-icon"><i class="fas fa-plus"></i></div>
+                <div class="action-text">
+                    <h4>Add Transaction</h4>
+                    <p>Log a new expense</p>
+                </div>
+            </a>
+            <a href="/bills/add" class="action-card">
+                <div class="action-icon"><i class="fas fa-calendar-plus"></i></div>
+                <div class="action-text">
+                    <h4>Add Bill</h4>
+                    <p>Set a reminder</p>
+                </div>
+            </a>
+            <a href="/transactions" class="action-card">
+                <div class="action-icon"><i class="fas fa-camera"></i></div>
+                <div class="action-text">
+                    <h4>OCR Upload</h4>
+                    <p>Scan your receipt</p>
+                </div>
+            </a>
+        </section>
+
+        <!-- Top Stats Row -->
         <section class="stats-grid">
             <div class="stat-card">
                 <div class="stat-icon income-bg"><i class="fas fa-wallet"></i></div>
                 <div class="stat-details">
                     <p class="stat-label">Total Balance</p>
                     <h2 class="stat-value" th:text="${currencySymbol + ' ' + #numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
-                    <p class="stat-change" th:classappend="${balance >= 0} ? 'positive' : 'negative'"
-                       th:text="${balance >= 0 ? 'Account in Surplus' : 'Account in Deficit'}">Status</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon expense-bg"><i class="fas fa-credit-card"></i></div>
                 <div class="stat-details">
-                    <p class="stat-label">Monthly Expenses</p>
+                    <p class="stat-label">Spent This Month</p>
                     <h2 class="stat-value" th:text="${currencySymbol + ' ' + #numbers.formatDecimal(monthlyExpenses, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
-                    <p class="stat-change muted" th:text="${#temporals.format(#temporals.createNow(), 'MMMM yyyy')}">Month</p>
                 </div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon budget-bg"><i class="fas fa-chart-pie"></i></div>
                 <div class="stat-details">
-                    <p class="stat-label">Budget Progress</p>
-                    <h2 class="stat-value" th:text="${budgetStatusText}">0% Used</h2>
+                    <p class="stat-label">Budget Usage</p>
+                    <h2 class="stat-value" th:text="${budgetStatusText}">0%</h2>
                     <div class="mini-progress">
                         <div class="mini-bar" th:style="'width: ' + ${budgetPercent} + '%'"></div>
                     </div>
@@ -63,57 +146,99 @@
             </div>
         </section>
 
-        <!-- Main Dashboard Widgets -->
-        <div class="dashboard-widgets">
-            <!-- Recent Transactions Widget -->
-            <section class="widget recent-activity">
-                <div class="widget-header">
-                    <h3>Recent Transactions</h3>
-                    <a th:href="@{/transactions}" class="btn-text">View All</a>
-                </div>
-                <div class="activity-list">
-                    <div class="activity-item" th:each="tx : ${recentTransactions}">
-                        <div class="item-icon">
-                            <i th:class="${tx.transactionType == 'Income' ? 'fas fa-money-bill-wave' : 'fas fa-shopping-cart'}"></i>
-                        </div>
-                        <div class="item-info">
-                            <p class="item-title" th:text="${tx.description}">Transaction</p>
-                            <p class="item-date" th:text="${tx.date}">Date</p>
-                        </div>
-                        <p class="item-amount"
-                           th:classappend="${tx.transactionType == 'Income' ? 'income' : 'expense'}"
-                           th:text="${(tx.transactionType == 'Income' ? '+' : '-') + currencySymbol + ' ' + tx.amount}">
-                            Amount
-                        </p>
+        <div class="dashboard-grid">
+            <!-- Left Column -->
+            <div class="dashboard-left">
+                <!-- Spending Breakdown Chart -->
+                <section class="widget" style="margin-bottom: 30px;">
+                    <div class="widget-header">
+                        <h3>Spending Breakdown</h3>
+                        <p class="subheading">Current Month</p>
                     </div>
-                    <p th:if="${recentTransactions.empty}" class="subheading">No recent activity.</p>
-                </div>
-            </section>
+                    <div class="chart-widget">
+                        <canvas id="dashCategoryChart"></canvas>
+                    </div>
+                </section>
 
-            <!-- Upcoming Bills Widget -->
-            <section class="widget upcoming-bills">
-                <div class="widget-header">
-                    <h3>Upcoming Bills</h3>
-                    <a th:href="@{/bills}" class="btn-text">Manage</a>
-                </div>
-                <div class="bill-mini-list">
-                    <div class="bill-mini-card" th:each="bill : ${upcomingBills}"
-                         th:classappend="${bill.dueDate.isBefore(#temporals.createToday().plusDays(3))} ? 'urgent' : ''">
-                        <div class="bill-info">
-                            <p class="bill-name" th:text="${bill.name}">Bill Name</p>
-                            <p class="bill-due" th:text="'Due: ' + ${bill.dueDate}">Due Date</p>
-                        </div>
-                        <p class="bill-amount" th:text="${currencySymbol + ' ' + bill.amount}">Amount</p>
+                <!-- Recent Activity -->
+                <section class="widget">
+                    <div class="widget-header">
+                        <h3>Recent Transactions</h3>
+                        <a th:href="@{/transactions}" class="btn-text">View History</a>
                     </div>
-                    <p th:if="${upcomingBills.empty}" class="subheading">No upcoming bills.</p>
-                </div>
-                <div class="quick-action">
-                    <button class="btn-outline" onclick="location.href='/bills/add'">+ Add New Reminder</button>
-                </div>
-            </section>
+                    <div class="activity-list">
+                        <div class="activity-item" th:each="tx : ${recentTransactions}">
+                            <div class="item-icon">
+                                <i th:class="${tx.transactionType == 'Income' ? 'fas fa-arrow-up' : 'fas fa-arrow-down'}"
+                                   th:style="${tx.transactionType == 'Income' ? 'color: #38a169' : 'color: #e53e3e'}"></i>
+                            </div>
+                            <div class="item-info">
+                                <p class="item-title" th:text="${tx.description}">Description</p>
+                                <p class="item-date" th:text="${#temporals.format(tx.date, 'MMM dd, yyyy')}">Date</p>
+                            </div>
+                            <p class="item-amount"
+                               th:classappend="${tx.transactionType == 'Income' ? 'income' : 'expense'}"
+                               th:text="${(tx.transactionType == 'Income' ? '+' : '-') + currencySymbol + ' ' + tx.amount}">$0.00</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="dashboard-right">
+                <section class="widget">
+                    <div class="widget-header">
+                        <h3>Upcoming Bills</h3>
+                        <a th:href="@{/bills}" class="btn-text">Manage</a>
+                    </div>
+                    <div class="bill-mini-list">
+                        <div class="bill-mini-card" th:each="bill : ${upcomingBills}"
+                             th:classappend="${bill.dueDate.isBefore(#temporals.createToday().plusDays(3))} ? 'urgent' : ''">
+                            <div class="bill-info">
+                                <p class="bill-name" th:text="${bill.name}">Bill</p>
+                                <p class="bill-due" th:text="'Due ' + ${#temporals.format(bill.dueDate, 'MMM dd')}">Date</p>
+                            </div>
+                            <p class="bill-amount" th:text="${currencySymbol + ' ' + bill.amount}">$0.00</p>
+                        </div>
+                        <p th:if="${upcomingBills.empty}" class="subheading">No pending bills.</p>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 </div>
+
+<script th:inline="javascript">
+    const labels = [[${chartLabels}]];
+    const data = [[${chartData}]];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('dashCategoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    backgroundColor: ['#28a745', '#ff6347', '#007bff', '#ffc107', '#6f42c1', '#20c997'],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 12, padding: 15, font: { size: 12 } }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

@@ -53,8 +53,10 @@ public class MainController {
 
         Long userId = user.getId();
         List<Transaction> allTransactions = transactionService.getTransactionsByUserId(userId);
+        Map<Long, String> categoryMap = categoryService.getAllCategories().stream()
+                .collect(Collectors.toMap(c -> c.getId(), c -> c.getName()));
 
-        // 1. Calculate Total Balance
+        // 1. Balance Calculations
         BigDecimal totalIncome = allTransactions.stream()
                 .filter(t -> "Income".equalsIgnoreCase(t.getTransactionType()))
                 .map(Transaction::getAmount)
@@ -67,15 +69,26 @@ public class MainController {
 
         BigDecimal balance = totalIncome.subtract(totalExpenses);
 
-        // 2. Monthly Expenses (Current Month)
+        // 2. Monthly Stats
         LocalDate now = LocalDate.now();
-        BigDecimal monthlyExpenses = allTransactions.stream()
-                .filter(t -> "Expense".equalsIgnoreCase(t.getTransactionType()))
+        List<Transaction> currentMonthTxs = allTransactions.stream()
                 .filter(t -> t.getDate().getMonth() == now.getMonth() && t.getDate().getYear() == now.getYear())
+                .collect(Collectors.toList());
+
+        BigDecimal monthlyExpenses = currentMonthTxs.stream()
+                .filter(t -> "Expense".equalsIgnoreCase(t.getTransactionType()))
                 .map(Transaction::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // 3. Budget Progress (Aggregated)
+        // 3. Category Breakdown for Dashboard Chart
+        Map<String, BigDecimal> categoryBreakdown = currentMonthTxs.stream()
+                .filter(t -> "Expense".equalsIgnoreCase(t.getTransactionType()))
+                .collect(Collectors.groupingBy(
+                        tx -> categoryMap.getOrDefault(tx.getCategoryId(), "Other"),
+                        Collectors.reducing(BigDecimal.ZERO, Transaction::getAmount, BigDecimal::add)
+                ));
+
+        // 4. Budget Progress
         List<BudgetService.BudgetView> budgetViews = budgetService.getUserBudgets(userId);
         BigDecimal totalBudgetLimit = budgetViews.stream()
                 .map(bv -> bv.getBudget().getLimitAmount())
@@ -91,31 +104,28 @@ public class MainController {
                     .divide(totalBudgetLimit, 0, RoundingMode.HALF_UP).intValue();
         }
 
-        // 4. Recent Transactions (Last 5)
+        // 5. Recent Items
         List<Transaction> recentTransactions = allTransactions.stream()
                 .sorted(Comparator.comparing(Transaction::getDate).reversed())
                 .limit(5)
                 .collect(Collectors.toList());
 
-        // 5. Upcoming Bills (Unpaid, next 3)
         List<Bill> upcomingBills = billService.getBillsByUserId(userId).stream()
                 .filter(b -> !"Paid".equalsIgnoreCase(b.getStatus()))
                 .sorted(Comparator.comparing(Bill::getDueDate))
                 .limit(3)
                 .collect(Collectors.toList());
 
-        // Category Map for Names
-        Map<Long, String> categoryMap = categoryService.getAllCategories().stream()
-                .collect(Collectors.toMap(c -> c.getId(), c -> c.getName()));
-
         model.addAttribute("user", user);
         model.addAttribute("balance", balance);
         model.addAttribute("monthlyExpenses", monthlyExpenses);
-        model.addAttribute("budgetPercent", Math.min(budgetPercent, 100)); // Cap UI at 100% for bar
-        model.addAttribute("budgetStatusText", budgetPercent + "% Used");
+        model.addAttribute("budgetPercent", Math.min(budgetPercent, 100));
+        model.addAttribute("budgetStatusText", budgetPercent + "% of budget used");
         model.addAttribute("recentTransactions", recentTransactions);
         model.addAttribute("upcomingBills", upcomingBills);
         model.addAttribute("categoryMap", categoryMap);
+        model.addAttribute("chartLabels", categoryBreakdown.keySet());
+        model.addAttribute("chartData", categoryBreakdown.values());
         model.addAttribute("currencySymbol", user.getDefaultCurrency() != null ? user.getDefaultCurrency().getCurrencySymbol() : "RM");
 
         return "MainPage";
