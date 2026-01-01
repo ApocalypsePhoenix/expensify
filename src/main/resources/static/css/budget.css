@@ -208,3 +208,42 @@ header h1 {
 .status.on-track { background-color: #f0fdf4; color: #166534; }
 .status.approaching-limit { background-color: #fffbeb; color: #92400e; }
 .status.limit-reached, .status.exceeding-limit { background-color: #fef2f2; color: #991b1b; }
+
+/* Action Button Styles */
+.budget-actions {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+.budget-actions form {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.btn-edit { background-color: #f0fdf4; color: #166534; }
+.btn-delete { background-color: #fef2f2; color: #991b1b; }
+.btn-edit:hover { background-color: #dcfce7; }
+.btn-delete:hover { background-color: #fee2e2; }

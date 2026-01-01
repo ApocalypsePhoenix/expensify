@@ -27,17 +27,26 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @GetMapping
-    public String showTransactions(HttpSession session, Model model) {
+    public String showTransactions(
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String order,
+            HttpSession session,
+            Model model) {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) return "redirect:/users/login";
 
-        List<Transaction> transactions = transactionService.getTransactionsByUserId(user.getId());
+        // Fetch sorted transactions
+        List<Transaction> transactions = transactionService.getTransactionsByUserId(user.getId(), sortBy, order);
         model.addAttribute("transactions", transactions);
 
         // Prepare category map for displaying category names
         Map<Long, String> categoryMap = categoryService.getAllCategories().stream()
                 .collect(Collectors.toMap(c -> c.getId(), c -> c.getName()));
         model.addAttribute("categoryMap", categoryMap);
+
+        // Pass sorting state back to the UI for visual indicators
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("order", order);
 
         return "TransactionsPage";
     }
@@ -65,12 +74,11 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
-    // Edit Transaction
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Transaction transaction = transactionService.getTransactionById(id);
         model.addAttribute("transaction", transaction);
-        return "EditTransactionPage"; // You need to create this page
+        return "EditTransactionPage";
     }
 
     @PostMapping("/edit/{id}")
@@ -87,7 +95,6 @@ public class TransactionController {
         return "redirect:/transactions";
     }
 
-    // Delete Transaction
     @PostMapping("/delete/{id}")
     public String deleteTransaction(@PathVariable Long id) {
         transactionService.deleteTransaction(id);

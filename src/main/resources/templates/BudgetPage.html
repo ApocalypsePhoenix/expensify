@@ -5,30 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budgets - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/budget.css">
-    <style>
-        .budget-actions {
-            margin-top: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            padding-top: 15px;
-            border-top: 1px solid #f1f5f9;
-        }
-        .btn-action {
-            padding: 8px;
-            border: none;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-        }
-        .btn-edit { background-color: #f0fdf4; color: #166534; }
-        .btn-delete { background-color: #fef2f2; color: #991b1b; }
-        .btn-edit:hover { background-color: #dcfce7; }
-        .btn-delete:hover { background-color: #fee2e2; }
-    </style>
 </head>
 <body>
 
@@ -94,7 +70,7 @@
 
                     <div class="budget-actions">
                         <a th:href="@{/budgets/edit/{id}(id=${view.budget.id})}" class="btn-action btn-edit">Edit</a>
-                        <form th:action="@{/budgets/delete/{id}(id=${view.budget.id})}" method="POST" style="display:inline;">
+                        <form th:action="@{/budgets/delete/{id}(id=${view.budget.id})}" method="POST">
                             <button type="submit" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this budget?')">Delete</button>
                         </form>
                     </div>

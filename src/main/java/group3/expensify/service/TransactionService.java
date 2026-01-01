@@ -3,6 +3,7 @@ package group3.expensify.service;
 import group3.expensify.model.Transaction;
 import group3.expensify.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,17 @@ public class TransactionService {
         return transactionRepository.findByUserId(userId);
     }
 
+    /**
+     * Fetch transactions with sorting
+     * @param userId current user ID
+     * @param sortBy field name to sort by
+     * @param order "asc" or "desc"
+     */
+    public List<Transaction> getTransactionsByUserId(Long userId, String sortBy, String order) {
+        Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        return transactionRepository.findByUserId(userId, sort);
+    }
+
     public void saveTransaction(Transaction transaction) {
         transactionRepository.save(transaction);
     }
@@ -26,10 +38,10 @@ public class TransactionService {
     }
 
     public void updateTransaction(Transaction transaction) {
-        transactionRepository.save(transaction);  // Same as save, but this will update if the entity exists
+        transactionRepository.save(transaction);
     }
 
     public void deleteTransaction(Long id) {
-        transactionRepository.deleteById(id);  // Delete the transaction by ID
+        transactionRepository.deleteById(id);
     }
 }
