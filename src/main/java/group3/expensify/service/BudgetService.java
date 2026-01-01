@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class BudgetService {
@@ -33,16 +32,21 @@ public class BudgetService {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             String status;
-            BigDecimal usage = spent.divide(budget.getLimitAmount(), 2, BigDecimal.ROUND_HALF_UP);
+            BigDecimal limit = budget.getLimitAmount();
 
-            if (usage.compareTo(BigDecimal.ONE) > 0) {
-                status = "Exceeding Limit";
-            } else if (usage.compareTo(BigDecimal.ONE) == 0) {
-                status = "Limit Reached";
-            } else if (usage.compareTo(new BigDecimal("0.75")) >= 0) {
-                status = "Approaching Limit";
+            if (limit.compareTo(BigDecimal.ZERO) == 0) {
+                status = "No Limit Set";
             } else {
-                status = "On Track";
+                BigDecimal usage = spent.divide(limit, 2, BigDecimal.ROUND_HALF_UP);
+                if (usage.compareTo(BigDecimal.ONE) > 0) {
+                    status = "Exceeding Limit";
+                } else if (usage.compareTo(BigDecimal.ONE) == 0) {
+                    status = "Limit Reached";
+                } else if (usage.compareTo(new BigDecimal("0.75")) >= 0) {
+                    status = "Approaching Limit";
+                } else {
+                    status = "On Track";
+                }
             }
 
             views.add(new BudgetView(budget, spent, status));
@@ -52,6 +56,14 @@ public class BudgetService {
 
     public void saveBudget(Budget budget) {
         budgetRepository.save(budget);
+    }
+
+    public Budget getBudgetById(Long id) {
+        return budgetRepository.findById(id).orElseThrow(() -> new RuntimeException("Budget not found"));
+    }
+
+    public void deleteBudget(Long id) {
+        budgetRepository.deleteById(id);
     }
 
     public static class BudgetView {

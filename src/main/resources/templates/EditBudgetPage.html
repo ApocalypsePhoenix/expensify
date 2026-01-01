@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Budget - EXPEN$IFY</title>
+    <link rel="stylesheet" href="/css/addbudget.css">
+</head>
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
+        </div>
+        <ul>
+            <li><a th:href="@{/dashboard}">Dashboard</a></li>
+            <li><a th:href="@{/transactions}">Transactions</a></li>
+            <li><a th:href="@{/bills}">Bills</a></li>
+            <li><a th:href="@{/budgets}" class="active">Budgets</a></li>
+            <li><a th:href="@{/reports}">Reports</a></li>
+            <li><a th:href="@{/users/settings}">Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <header>
+            <h1>Edit Budget</h1>
+            <p>Update your budget details below.</p>
+        </header>
+
+        <section class="budget-form-section">
+            <h3>Budget Details</h3>
+            <p class="budget-description">Modify the fields to update your budget.</p>
+
+            <form th:action="@{/budgets/edit/{id}(id=${budget.id})}" method="POST">
+                <div class="input-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.id}"
+                                th:text="${cat.name}"
+                                th:selected="${cat.id == budget.categoryId}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="limit">Limit Amount</label>
+                    <input type="number" id="limit" name="limit" step="0.01" th:value="${budget.limitAmount}" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="period">Budget Period</label>
+                    <select id="period" name="period" required>
+                        <option value="Monthly" th:selected="${budget.period == 'Monthly'}">Monthly</option>
+                        <option value="Yearly" th:selected="${budget.period == 'Yearly'}">Yearly</option>
+                        <option value="Weekly" th:selected="${budget.period == 'Weekly'}">Weekly</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Save Changes</button>
+            </form>
+        </section>
+    </div>
+</div>
+
+</body>
+</html>

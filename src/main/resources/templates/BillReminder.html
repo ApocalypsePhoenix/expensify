@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Reminders - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/bill.css">
+    <!-- Optional: FontAwesome for the clock icon, ensuring it matches other pages -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
@@ -40,6 +42,12 @@
                     <div class="bill-header">
                         <h3 th:text="${bill.name}">Bill Name</h3>
                         <p class="due-date">📅 Due: <span th:text="${#temporals.format(bill.dueDate, 'MMM d, yyyy')}">Jul 1, 2025</span></p>
+
+                        <!-- NEW: Visible Reminder Time -->
+                        <p class="due-date" th:if="${bill.reminderTime != null}" style="color: #e53e3e; font-size: 13px;">
+                            <i class="fas fa-bell"></i> Remind: <span th:text="${#temporals.format(bill.reminderTime, 'MMM d, h:mm a')}">Jul 1, 10:00 AM</span>
+                        </p>
+
                         <p class="amount">RM <span th:text="${bill.amount}">15.99</span></p>
                     </div>
 

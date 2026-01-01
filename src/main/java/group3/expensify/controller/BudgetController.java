@@ -61,4 +61,38 @@ public class BudgetController {
         budgetService.saveBudget(budget);
         return "redirect:/budgets";
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+        Budget budget = budgetService.getBudgetById(id);
+        model.addAttribute("budget", budget);
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "EditBudgetPage";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String updateBudget(@PathVariable Long id, @RequestParam Map<String, String> form, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+        Budget budget = budgetService.getBudgetById(id);
+        budget.setCategoryId(Long.parseLong(form.get("category")));
+        budget.setLimitAmount(new BigDecimal(form.get("limit")));
+        budget.setPeriod(form.get("period"));
+
+        budgetService.saveBudget(budget);
+        return "redirect:/budgets";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteBudget(@PathVariable Long id, HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/users/login";
+
+        budgetService.deleteBudget(id);
+        return "redirect:/budgets";
+    }
 }

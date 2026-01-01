@@ -15,7 +15,6 @@
       <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
     </div>
     <ul>
-      <!-- Added Dashboard Link to match dashboard.css layout -->
       <li><a th:href="@{/dashboard}">Dashboard</a></li>
       <li><a th:href="@{/transactions}">Transactions</a></li>
       <li><a th:href="@{/bills}" class="active">Bills</a></li>
@@ -52,12 +51,20 @@
           <input type="date" id="due-date" name="due-date" th:value="${bill.dueDate}" required>
         </div>
 
+        <!-- NEW: Reminder Time Input -->
+        <div class="input-group">
+          <label for="reminder-time">Reminder Time</label>
+          <!-- Formats LocalDateTime to 'yyyy-MM-ddTHH:mm' which is required for datetime-local input -->
+          <input type="datetime-local" id="reminder-time" name="reminder-time"
+                 th:value="${bill.reminderTime != null ? #temporals.format(bill.reminderTime, 'yyyy-MM-dd''T''HH:mm') : ''}">
+        </div>
+
         <div class="input-group">
           <label for="recurrence">Recurrence</label>
           <select id="recurrence" name="recurrence" required>
-            <option th:value="monthly" th:selected="${bill.recurrence == 'monthly'}">Monthly</option>
-            <option th:value="yearly" th:selected="${bill.recurrence == 'yearly'}">Yearly</option>
-            <option th:value="weekly" th:selected="${bill.recurrence == 'weekly'}">Weekly</option>
+            <option th:value="monthly" th:selected="${bill.recurrence == 'Monthly'}">Monthly</option>
+            <option th:value="yearly" th:selected="${bill.recurrence == 'Yearly'}">Yearly</option>
+            <option th:value="weekly" th:selected="${bill.recurrence == 'Weekly'}">Weekly</option>
           </select>
         </div>
 

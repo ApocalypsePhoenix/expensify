@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +34,8 @@
                 </div>
                 <button type="submit" class="btn">Sign In</button>
             </form>
-            <p class="register-link">Don't have an account? <a href="http://localhost:8080/users/register">Register here</a></p>
+            <!-- Fixed hardcoded port 8080 link to be dynamic -->
+            <p class="register-link">Don't have an account? <a th:href="@{/users/register}">Register here</a></p>
         </div>
     </div>
 </div>
