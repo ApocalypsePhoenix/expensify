@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import group3.expensify.model.Currency;
 import group3.expensify.service.CurrencyService;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,6 @@ public class UserController {
         }
     }
 
-    // New Logout Endpoint
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
@@ -76,8 +76,11 @@ public class UserController {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (loggedInUser == null) return "redirect:/users/login";
 
+        // Refresh user from DB to ensure latest data (like profile image) is shown
+        User user = userService.getUserById(loggedInUser.getId());
         List<Currency> currencies = currencyService.getAllCurrencies();
-        model.addAttribute("user", loggedInUser);
+
+        model.addAttribute("user", user);
         model.addAttribute("currencies", currencies);
         return "SettingsPage";
     }
@@ -93,10 +96,30 @@ public class UserController {
 
         userService.updateUserSettings(loggedInUser.getId(), name, email, currency);
 
-        // Update session with latest data
-        User updatedUser = userService.loginUser(email, loggedInUser.getPassword());
+        // Update session
+        User updatedUser = userService.getUserById(loggedInUser.getId());
         session.setAttribute("loggedInUser", updatedUser);
 
         return "redirect:/users/settings?success=1";
+    }
+
+    // New Profile Image Upload endpoint
+    @PostMapping("/settings/upload-avatar")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) return "redirect:/users/login";
+
+        try {
+            if (!file.isEmpty()) {
+                userService.updateProfileImage(loggedInUser.getId(), file);
+                // Refresh session
+                User updatedUser = userService.getUserById(loggedInUser.getId());
+                session.setAttribute("loggedInUser", updatedUser);
+            }
+        } catch (Exception e) {
+            return "redirect:/users/settings?error=upload_failed";
+        }
+
+        return "redirect:/users/settings?success=avatar_updated";
     }
 }

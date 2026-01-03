@@ -19,6 +19,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // New field for profile image path
+    private String profileImagePath;
+
     @ManyToOne
     @JoinColumn(name = "default_currency_id")
     private Currency defaultCurrency;
@@ -55,6 +58,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getProfileImagePath() {
+        return profileImagePath;
+    }
+
+    public void setProfileImagePath(String profileImagePath) {
+        this.profileImagePath = profileImagePath;
     }
 
     public Currency getDefaultCurrency() {

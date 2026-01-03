@@ -267,3 +267,27 @@ header h1 {
 @media (max-width: 1100px) {
     .dashboard-widgets { grid-template-columns: 1fr; }
 }
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 5px;
+}
+
+/* Ensure user-avatar works for both div (text) and img tags */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #f0f7f1;
+    color: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: 2px solid var(--primary-green);
+    flex-shrink: 0;
+    object-fit: cover; /* Important for images to not stretch */
+}
