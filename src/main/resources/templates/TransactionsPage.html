@@ -36,9 +36,10 @@
                     <button type="submit" class="btn-add-transaction">Add Transaction</button>
                 </form>
 
-                <form th:action="@{/receipts/ocr}" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="file" accept="image/*" required style="margin-right: 10px;">
-                    <button type="submit" class="btn-upload-ocr">Upload OCR</button>
+                <!-- Cleaned up OCR Form: No visible 'Choose File' button -->
+                <form id="transOcrForm" th:action="@{/receipts/ocr}" method="POST" enctype="multipart/form-data" style="display:inline-block;">
+                    <input type="file" id="transOcrInput" name="file" accept="image/*" style="display: none;" onchange="document.getElementById('transOcrForm').submit();">
+                    <button type="button" class="btn-upload-ocr" onclick="document.getElementById('transOcrInput').click();">Upload OCR</button>
                 </form>
             </div>
         </header>

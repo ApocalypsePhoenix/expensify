@@ -29,7 +29,7 @@ body, html {
     min-height: 100vh;
 }
 
-/* Sidebar (Consistent Consistency) */
+/* Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
@@ -89,7 +89,6 @@ header {
     width: 100%;
     max-width: 1200px;
     margin-bottom: 40px;
-    align-self: center;
 }
 
 header h1 {
@@ -140,9 +139,10 @@ header h1 {
 
 .stat-label { font-size: 14px; font-weight: 600; color: var(--text-muted); }
 .stat-value { font-size: 24px; font-weight: 800; margin: 4px 0; }
-.stat-change { font-size: 12px; font-weight: 600; }
-.stat-change.positive { color: #38a169; }
-.stat-change.negative { color: #e53e3e; }
+
+/* Color coding for Net Balance */
+.stat-value.positive { color: #38a169; }
+.stat-value.negative { color: #e53e3e; }
 
 .mini-progress { height: 6px; background: #edf2f7; border-radius: 10px; margin-top: 10px; overflow: hidden; }
 .mini-bar { height: 100%; background: var(--primary-green); border-radius: 10px; }
@@ -199,15 +199,6 @@ header h1 {
 .bill-name { font-size: 14px; font-weight: 700; }
 .bill-due { font-size: 12px; color: var(--text-muted); }
 .bill-amount { font-weight: 700; }
-
-.quick-action { margin-top: 25px; }
-.btn-outline {
-    width: 100%; padding: 12px; background: transparent;
-    border: 1.5px dashed #cbd5e0; border-radius: 8px;
-    color: var(--text-muted); font-weight: 600; cursor: pointer;
-    transition: all 0.2s;
-}
-.btn-outline:hover { border-color: var(--primary-green); color: var(--primary-green); background: #f0f7f1; }
 
 @media (max-width: 1100px) {
     .dashboard-widgets { grid-template-columns: 1fr; }

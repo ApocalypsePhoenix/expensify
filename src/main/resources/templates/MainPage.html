@@ -27,6 +27,7 @@
             color: inherit;
             border: 1px solid #e2e8f0;
             transition: all 0.2s ease;
+            cursor: pointer;
         }
         .action-card:hover {
             transform: translateY(-3px);
@@ -63,6 +64,122 @@
             align-items: center;
         }
 
+        /* Notifications Styling */
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 10px;
+        }
+
+        .notification-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-bell {
+            font-size: 22px;
+            color: #4a5568;
+            padding: 10px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .notification-bell:hover {
+            background: #f7fafc;
+        }
+
+        .bell-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e53e3e;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid white;
+            font-weight: 800;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            z-index: 2000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .notification-container:hover .notification-dropdown {
+            display: block;
+        }
+
+        .dropdown-header {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .dropdown-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: #f0f7f1;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-status-icon {
+            font-size: 10px;
+            margin-right: 8px;
+        }
+
+        .item-status-icon.urgent { color: #e53e3e; }
+        .item-status-icon.warning { color: #ed8936; }
+
+        .dropdown-item h5 {
+            font-size: 14px;
+            margin: 0 0 4px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .dropdown-item p {
+            font-size: 12px;
+            color: #718096;
+            margin: 0;
+        }
+
+        .empty-notifications {
+            padding: 30px;
+            text-align: center;
+            color: #a0aec0;
+            font-size: 14px;
+        }
+
         @media (max-width: 1024px) {
             .dashboard-grid { grid-template-columns: 1fr; }
         }
@@ -71,7 +188,6 @@
 <body>
 
 <div class="wrapper">
-    <!-- Original Sidebar preserved exactly -->
     <div class="sidebar">
         <div class="logo">
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
@@ -86,14 +202,38 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
-        <header>
-            <h1>Hello, <span th:text="${user.name}">User</span>!</h1>
-            <p class="subheading" th:text="'Summary for ' + ${#temporals.format(#temporals.createNow(), 'MMMM yyyy')}">Summary</p>
-        </header>
+        <div class="header-top">
+            <header style="margin-bottom: 0;">
+                <h1>Hello, <span th:text="${user.name}">User</span>!</h1>
+                <p class="subheading" th:text="'Summary for ' + ${#temporals.format(#temporals.createNow(), 'MMMM yyyy')}">Summary</p>
+            </header>
 
-        <!-- Quick Actions Row -->
+            <!-- Notifications Dropdown -->
+            <div class="notification-container">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="bell-badge" th:if="${not notifications.empty}" th:text="${notifications.size()}">0</span>
+                </div>
+                <div class="notification-dropdown">
+                    <div class="dropdown-header">Alert Center</div>
+                    <div class="dropdown-list">
+                        <div class="dropdown-item" th:each="alert : ${notifications}">
+                            <h5>
+                                <i class="fas fa-circle item-status-icon" th:classappend="${alert.type}"></i>
+                                <span th:text="${alert.title}">Title</span>
+                            </h5>
+                            <p th:text="${alert.message}">Message</p>
+                        </div>
+                        <div class="empty-notifications" th:if="${notifications.empty}">
+                            <i class="fas fa-check-circle" style="display: block; font-size: 24px; margin-bottom: 10px; color: #38a169;"></i>
+                            Everything is on track!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="quick-actions-bar">
             <a href="/transactions/add" class="action-card">
                 <div class="action-icon"><i class="fas fa-plus"></i></div>
@@ -109,13 +249,17 @@
                     <p>Set a reminder</p>
                 </div>
             </a>
-            <a href="/transactions" class="action-card">
+            <!-- Integrated Dashboard OCR Trigger -->
+            <div class="action-card" onclick="document.getElementById('dashOcrInput').click();">
                 <div class="action-icon"><i class="fas fa-camera"></i></div>
                 <div class="action-text">
                     <h4>OCR Upload</h4>
                     <p>Scan your receipt</p>
                 </div>
-            </a>
+                <form id="dashOcrForm" th:action="@{/receipts/ocr}" method="POST" enctype="multipart/form-data" style="display: none;">
+                    <input type="file" id="dashOcrInput" name="file" accept="image/*" onchange="document.getElementById('dashOcrForm').submit();">
+                </form>
+            </div>
         </section>
 
         <!-- Top Stats Row -->
@@ -123,8 +267,14 @@
             <div class="stat-card">
                 <div class="stat-icon income-bg"><i class="fas fa-wallet"></i></div>
                 <div class="stat-details">
-                    <p class="stat-label">Total Balance</p>
-                    <h2 class="stat-value" th:text="${currencySymbol + ' ' + #numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
+                    <p class="stat-label">Net Balance</p>
+                    <h2 class="stat-value"
+                        th:classappend="${balance.compareTo(T(java.math.BigDecimal).ZERO) >= 0 ? 'positive' : 'negative'}"
+                        th:text="${currencySymbol + ' ' + #numbers.formatDecimal(balance, 1, 'COMMA', 2, 'POINT')}">RM 0.00</h2>
+                    <p class="stat-subtext" style="font-size: 11px; color: #718096; margin-top: 4px;">
+                        <span th:text="${currencySymbol + ' ' + #numbers.formatDecimal(totalIncome, 1, 'COMMA', 2, 'POINT')}"></span> earned -
+                        <span th:text="${currencySymbol + ' ' + #numbers.formatDecimal(totalExpenses, 1, 'COMMA', 2, 'POINT')}"></span> spent
+                    </p>
                 </div>
             </div>
             <div class="stat-card">
@@ -147,9 +297,7 @@
         </section>
 
         <div class="dashboard-grid">
-            <!-- Left Column -->
             <div class="dashboard-left">
-                <!-- Spending Breakdown Chart -->
                 <section class="widget" style="margin-bottom: 30px;">
                     <div class="widget-header">
                         <h3>Spending Breakdown</h3>
@@ -160,7 +308,6 @@
                     </div>
                 </section>
 
-                <!-- Recent Activity -->
                 <section class="widget">
                     <div class="widget-header">
                         <h3>Recent Transactions</h3>
@@ -184,7 +331,6 @@
                 </section>
             </div>
 
-            <!-- Right Column -->
             <div class="dashboard-right">
                 <section class="widget">
                     <div class="widget-header">

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -110,24 +112,79 @@ public class MainController {
                 .limit(5)
                 .collect(Collectors.toList());
 
-        List<Bill> upcomingBills = billService.getBillsByUserId(userId).stream()
+        List<Bill> allBills = billService.getBillsByUserId(userId);
+        List<Bill> upcomingBills = allBills.stream()
                 .filter(b -> !"Paid".equalsIgnoreCase(b.getStatus()))
                 .sorted(Comparator.comparing(Bill::getDueDate))
                 .limit(3)
                 .collect(Collectors.toList());
 
+        // 6. Notification Alerts
+        List<NotificationAlert> notifications = new ArrayList<>();
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        // Bill Notifications (based on reminder time)
+        for (Bill bill : allBills) {
+            if (!"Paid".equalsIgnoreCase(bill.getStatus()) && bill.getReminderTime() != null) {
+                if (currentDateTime.isAfter(bill.getReminderTime())) {
+                    notifications.add(new NotificationAlert(
+                            "Bill Reminder: " + bill.getName(),
+                            "Due on " + bill.getDueDate(),
+                            "urgent"
+                    ));
+                }
+            }
+        }
+
+        // Budget Notifications
+        for (BudgetService.BudgetView bv : budgetViews) {
+            String status = bv.getStatus();
+            if ("Approaching Limit".equalsIgnoreCase(status) ||
+                    "Limit Reached".equalsIgnoreCase(status) ||
+                    "Exceeding Limit".equalsIgnoreCase(status)) {
+
+                String categoryName = categoryMap.getOrDefault(bv.getBudget().getCategoryId(), "Category");
+                String type = "Exceeding Limit".equalsIgnoreCase(status) ? "urgent" : "warning";
+
+                notifications.add(new NotificationAlert(
+                        "Budget " + status + "!",
+                        categoryName + ": Spent " + bv.getSpent() + " / " + bv.getBudget().getLimitAmount(),
+                        type
+                ));
+            }
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("balance", balance);
+        model.addAttribute("totalIncome", totalIncome); // Added for breakdown
+        model.addAttribute("totalExpenses", totalExpenses); // Added for breakdown
         model.addAttribute("monthlyExpenses", monthlyExpenses);
         model.addAttribute("budgetPercent", Math.min(budgetPercent, 100));
         model.addAttribute("budgetStatusText", budgetPercent + "% of budget used");
         model.addAttribute("recentTransactions", recentTransactions);
         model.addAttribute("upcomingBills", upcomingBills);
+        model.addAttribute("notifications", notifications);
         model.addAttribute("categoryMap", categoryMap);
         model.addAttribute("chartLabels", categoryBreakdown.keySet());
         model.addAttribute("chartData", categoryBreakdown.values());
         model.addAttribute("currencySymbol", user.getDefaultCurrency() != null ? user.getDefaultCurrency().getCurrencySymbol() : "RM");
 
         return "MainPage";
+    }
+
+    // Helper class for notifications
+    public static class NotificationAlert {
+        private String title;
+        private String message;
+        private String type; // 'urgent' or 'warning'
+
+        public NotificationAlert(String title, String message, String type) {
+            this.title = title;
+            this.message = message;
+            this.type = type;
+        }
+        public String getTitle() { return title; }
+        public String getMessage() { return message; }
+        public String getType() { return type; }
     }
 }
