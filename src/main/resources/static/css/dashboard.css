@@ -29,7 +29,7 @@ body, html {
     min-height: 100vh;
 }
 
-/* Sidebar */
+/* Sidebar - Updated to Flexbox to support sticky footer */
 .sidebar {
     position: fixed;
     top: 0;
@@ -40,6 +40,8 @@ body, html {
     padding: 30px 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar .logo {
@@ -54,6 +56,7 @@ body, html {
 
 .sidebar ul {
     list-style: none;
+    flex: 1; /* This expands to push the footer to the bottom */
 }
 
 .sidebar ul li {
@@ -74,6 +77,67 @@ body, html {
 .sidebar ul li a:hover, .sidebar ul li a.active {
     background-color: #f0f7f1;
     color: var(--primary-green);
+}
+
+/* Sidebar Footer Styles */
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.logout-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: #e53e3e;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: 0.2s;
+    margin-bottom: 10px;
+}
+
+.logout-link:hover {
+    background: #fff5f5;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 5px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #f0f7f1;
+    color: var(--primary-green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: 2px solid var(--primary-green);
+    flex-shrink: 0;
+}
+
+.user-details {
+    overflow: hidden;
+}
+
+.user-details .user-name {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Main Content */

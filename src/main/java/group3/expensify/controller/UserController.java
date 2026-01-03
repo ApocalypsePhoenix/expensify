@@ -57,14 +57,18 @@ public class UserController {
         User user = userService.loginUser(email, password);
 
         if (user != null) {
-            // Login successful - store in session
             session.setAttribute("loggedInUser", user);
-            // FIX: Redirect to dashboard instead of transactions
             return "redirect:/dashboard";
         } else {
-            // Login failed - redirect with error
             return "redirect:/users/login?error=1";
         }
+    }
+
+    // New Logout Endpoint
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/users/login";
     }
 
     @GetMapping("/settings")
@@ -90,7 +94,6 @@ public class UserController {
         userService.updateUserSettings(loggedInUser.getId(), name, email, currency);
 
         // Update session with latest data
-        // Note: Password retrieval here might need adjustment depending on your security implementation
         User updatedUser = userService.loginUser(email, loggedInUser.getPassword());
         session.setAttribute("loggedInUser", updatedUser);
 

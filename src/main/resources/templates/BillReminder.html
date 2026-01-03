@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Reminders - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/bill.css">
+    <link rel="stylesheet" href="/css/dashboard.css"> <!-- Link shared sidebar styles -->
     <!-- Optional: FontAwesome for the clock icon, ensuring it matches other pages -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -24,6 +25,18 @@
             <li><a th:href="@{/reports}">Reports</a></li>
             <li><a th:href="@{/users/settings}">Settings</a></li>
         </ul>
+
+        <div class="sidebar-footer">
+            <a th:href="@{/users/logout}" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="user-profile">
+                <div class="user-avatar" th:text="${session.loggedInUser.name.substring(0,1).toUpperCase()}">U</div>
+                <div class="user-details">
+                    <span class="user-name" th:text="${session.loggedInUser.name}">User Name</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Main Content -->

@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transactions - EXPEN$IFY</title>
     <link rel="stylesheet" href="/css/transaction.css">
-    <!-- Using FontAwesome for sorting icons -->
+    <link rel="stylesheet" href="/css/dashboard.css"> <!-- Link shared sidebar styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
 <div class="wrapper">
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <img src="/images/expensifylogo.png" alt="EXPEN$IFY" class="logo-img">
@@ -24,9 +23,20 @@
             <li><a th:href="@{/reports}">Reports</a></li>
             <li><a th:href="@{/users/settings}">Settings</a></li>
         </ul>
+
+        <div class="sidebar-footer">
+            <a th:href="@{/users/logout}" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="user-profile">
+                <div class="user-avatar" th:text="${session.loggedInUser.name.substring(0,1).toUpperCase()}">U</div>
+                <div class="user-details">
+                    <span class="user-name" th:text="${session.loggedInUser.name}">User Name</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
         <header>
             <h1>Transactions</h1>
@@ -36,7 +46,6 @@
                     <button type="submit" class="btn-add-transaction">Add Transaction</button>
                 </form>
 
-                <!-- Cleaned up OCR Form: No visible 'Choose File' button -->
                 <form id="transOcrForm" th:action="@{/receipts/ocr}" method="POST" enctype="multipart/form-data" style="display:inline-block;">
                     <input type="file" id="transOcrInput" name="file" accept="image/*" style="display: none;" onchange="document.getElementById('transOcrForm').submit();">
                     <button type="button" class="btn-upload-ocr" onclick="document.getElementById('transOcrInput').click();">Upload OCR</button>
@@ -44,7 +53,6 @@
             </div>
         </header>
 
-        <!-- Transaction List Section -->
         <section class="transaction-section">
             <h3>Transaction List</h3>
             <p class="transaction-description">Browse your recent financial activities. Click column headers to sort results.</p>

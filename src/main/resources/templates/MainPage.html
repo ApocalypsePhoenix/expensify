@@ -64,7 +64,6 @@
             align-items: center;
         }
 
-        /* Notifications Styling */
         .header-top {
             display: flex;
             justify-content: space-between;
@@ -200,6 +199,19 @@
             <li><a th:href="@{/reports}">Reports</a></li>
             <li><a th:href="@{/users/settings}">Settings</a></li>
         </ul>
+
+        <!-- New Sidebar Footer -->
+        <div class="sidebar-footer">
+            <a th:href="@{/users/logout}" class="logout-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="user-profile">
+                <div class="user-avatar" th:text="${session.loggedInUser.name.substring(0,1).toUpperCase()}">U</div>
+                <div class="user-details">
+                    <span class="user-name" th:text="${session.loggedInUser.name}">User Name</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="content">
@@ -249,7 +261,6 @@
                     <p>Set a reminder</p>
                 </div>
             </a>
-            <!-- Integrated Dashboard OCR Trigger -->
             <div class="action-card" onclick="document.getElementById('dashOcrInput').click();">
                 <div class="action-icon"><i class="fas fa-camera"></i></div>
                 <div class="action-text">
