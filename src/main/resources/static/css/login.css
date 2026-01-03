@@ -6,6 +6,8 @@
     --bg-light: #f8f9fa;
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     --border-radius: 12px;
+    --text-main: #2d3748;
+    --text-muted: #718096;
 }
 
 * {
@@ -18,7 +20,7 @@ body, html {
     height: 100%;
     font-family: 'Inter', -apple-system, sans-serif;
     background-color: var(--bg-light);
-    color: #333;
+    color: var(--text-main);
 }
 
 /* Layout Wrapper */
@@ -81,7 +83,7 @@ body, html {
 
 .login-container p {
     font-size: 15px;
-    color: #718096;
+    color: var(--text-muted);
     margin-bottom: 30px;
 }
 
@@ -133,7 +135,7 @@ body, html {
 .register-link {
     font-size: 14px;
     margin-top: 25px;
-    color: #718096;
+    color: var(--text-muted);
 }
 
 .register-link a {

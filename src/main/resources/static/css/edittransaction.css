@@ -6,10 +6,16 @@
     --bg-light: #f8f9fa;
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     --border-radius: 12px;
+    --text-main: #2d3748;
+    --text-muted: #718096;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-light); color: #333; }
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-light);
+    color: var(--text-main);
+}
 
 .wrapper { display: flex; min-height: 100vh; }
 
@@ -53,8 +59,8 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-lig
 }
 
 header { width: 100%; max-width: 550px; margin-bottom: 30px; text-align: center; }
-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #1a1a1a; }
-header p { color: #6c757d; font-size: 16px; }
+header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #1a1a1a; }
+header p { color: var(--text-muted); font-size: 16px; }
 
 /* Form Card */
 .transaction-form-section {
@@ -66,8 +72,8 @@ header p { color: #6c757d; font-size: 16px; }
     max-width: 550px;
 }
 
-.transaction-form-section h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: #2d3748; }
-.transaction-description { font-size: 14px; color: #718096; margin-bottom: 30px; }
+.transaction-form-section h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; color: var(--text-main); }
+.transaction-description { font-size: 14px; color: var(--text-muted); margin-bottom: 30px; }
 
 .input-group { margin-bottom: 24px; }
 .input-group label { font-size: 14px; font-weight: 600; color: #4a5568; display: block; margin-bottom: 8px; }

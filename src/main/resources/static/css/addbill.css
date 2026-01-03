@@ -1,4 +1,4 @@
-/* Standardized Sidebar & Form UI - Synced with dashboard.css */
+/* Standardized Sidebar & Form UI - Synced with Dashboard */
 :root {
     --sidebar-width: 240px;
     --primary-green: #28a745;
@@ -6,6 +6,9 @@
     --bg-light: #f8f9fa;
     --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     --border-radius: 12px;
+    --text-main: #2d3748;
+    --text-muted: #718096;
+    --header-black: #1a1a1a;
 }
 
 * {
@@ -16,10 +19,11 @@
 
 body, html {
     height: 100%;
+    /* Standardized Dashboard Font */
     font-family: 'Inter', -apple-system, sans-serif;
     background-color: var(--bg-light);
-    color: #333;
-    line-height: normal; /* Force reset to match dashboard default */
+    color: var(--text-main);
+    line-height: normal;
 }
 
 .wrapper {
@@ -27,7 +31,7 @@ body, html {
     min-height: 100vh;
 }
 
-/* Sidebar - Exact replica of dashboard.css sidebar */
+/* Sidebar - Exact replica of Dashboard Sidebar */
 .sidebar {
     position: fixed;
     top: 0;
@@ -43,24 +47,15 @@ body, html {
 .sidebar .logo {
     text-align: center;
     margin-bottom: 40px;
-    display: block; /* Ensure block behavior */
 }
 
 .sidebar .logo-img {
     max-width: 160px;
     height: auto;
-    display: inline-block;
-    vertical-align: middle;
 }
 
 .sidebar ul {
     list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar ul li {
-    margin-bottom: 8px;
 }
 
 .sidebar ul li a {
@@ -71,12 +66,10 @@ body, html {
     display: block;
     padding: 12px 15px;
     border-radius: 8px;
-    transition: all 0.2s ease;
-    line-height: 1.2; /* Explicit line-height for alignment */
+    transition: 0.2s;
 }
 
-.sidebar ul li a:hover,
-.sidebar ul li a.active {
+.sidebar ul li a:hover {
     background-color: #f0f7f1;
     color: var(--primary-green);
 }
@@ -99,14 +92,15 @@ header {
 }
 
 header h1 {
-    font-size: 32px;
-    font-weight: 700;
+    /* Standardized Dashboard Header Style */
+    font-size: 28px;
+    font-weight: 800;
     margin-bottom: 8px;
-    color: #1a1a1a;
+    color: var(--header-black);
 }
 
 header p {
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 16px;
 }
 
@@ -124,12 +118,12 @@ header p {
     font-size: 20px;
     font-weight: 700;
     margin-bottom: 10px;
-    color: #2d3748;
+    color: var(--text-main);
 }
 
 .bill-description {
     font-size: 14px;
-    color: #718096;
+    color: var(--text-muted);
     margin-bottom: 30px;
 }
 
